@@ -2,13 +2,13 @@
 
 ---
     Infrastructure Automation Services
-        Infrastructure as Code
-            Open-Source: Terraform
+        Infrastructure as Code: 
+            * Terraform (Open-Source)
         Configuration Management
-            Open-Source: Ansible
+            * Ansible (Open-Source)
         Pipeline for automation 
-            Repository: Cloud Repositories
-            Build Trigger: Cloud Build
+            * Repository: Cloud Repositories
+            * Build Trigger: Cloud Build
         
 ---
 
