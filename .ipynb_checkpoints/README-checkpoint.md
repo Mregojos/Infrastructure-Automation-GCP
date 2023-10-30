@@ -31,4 +31,10 @@
         > IaC Files -> Repository -> Build Trigger -> GCP Services
          
         
-        
+ ---
+ Reference:
+     
+    | Repository Website: https://github.com/mregojos/infrastructure-automation-gcp
+    | Google Cloud Docs: cloud.google.com/docs
+    | Terraform Docs: terraform.io/docs
+    | Ansible Docs: ansible.com/docs 
