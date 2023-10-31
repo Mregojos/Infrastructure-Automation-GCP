@@ -32,9 +32,10 @@
          
         
  ---
- Reference:
+ Resources:
      
-    | Repository Website: https://github.com/mregojos/infrastructure-automation-gcp
-    | Google Cloud Docs: cloud.google.com/docs
-    | Terraform Docs: terraform.io/docs
-    | Ansible Docs: ansible.com/docs 
+ * Repository Website: https://github.com/mregojos/infrastructure-automation-gcp
+ * Google Cloud Docs: https://cloud.google.com/docs
+ * Google Cloud Terraform Examples GitHub: 
+ * Terraform Docs: https://terraform.io/docs
+ * Ansible Docs: https://ansible.com/docs 
