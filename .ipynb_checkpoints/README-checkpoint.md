@@ -34,7 +34,8 @@
  ---
  Resources:
      
- * Repository Website: https://github.com/mregojos/infrastructure-automation-gcp
+ * GitHub Repository: https://github.com/mregojos/infrastructure-automation-gcp
+ * GitHub Repository Tech Stack for Cloud, DevOps, SRE: https://github.com/mregojos/tech-stack
  * Google Cloud Docs: https://cloud.google.com/docs
  * Google Cloud Terraform Examples GitHub: 
  * Terraform Docs: https://terraform.io/docs
