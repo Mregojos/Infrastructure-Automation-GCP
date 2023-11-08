@@ -12,7 +12,7 @@
         
 ---
 
-    Project
+    Project (# TO DO)
         > IaC (GCP Services) to create
             * Virtual Private Network
             * Compute Engine
