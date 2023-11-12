@@ -11,4 +11,4 @@ git commit -m "Add and modify files"
 git push
 
 # username
-# password
+# password/key/token
