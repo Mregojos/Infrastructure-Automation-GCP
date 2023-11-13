@@ -3,10 +3,10 @@ DBNAME:
 USER:
     "matt"
 HOST:
-    "34.82.79.64"
+    ""
 DBPORT:
     "5000"
 DBPASSWORD:
     "password"
 PROJECT_NAME:
-    "matt-0706"
+    ""
