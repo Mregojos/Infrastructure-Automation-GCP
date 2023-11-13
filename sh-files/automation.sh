@@ -40,13 +40,15 @@ echo "#----------Firewall Rules has been successfully created.----------#"
 
 # Enable Artifact Registry, Cloud Build, and Cloud Run, Vertex AI
 # !gcloud services list --available
-gcloud services enable cloudbuild.googleapis.com artifactregistry.googleapis.com run.googleapis.com aiplatform.googleapis.com 
+gcloud services enable cloudbuild.googleapis.com artifactregistry.googleapis.com run.googleapis.com aiplatform.googleapis.com
+echo "#----------Services has been successfully enabled.----------#"
 
 # Create a Docker repository in Artifact Registry
 gcloud artifacts repositories create $APP_ARTIFACT_NAME \
     --repository-format=docker \
     --location=$REGION \
     --description="Docker repository"
+echo "#----------Artifact Repository has been successfully created.----------#"
 
 # Check if the path is correct
 cd ..
@@ -56,9 +58,11 @@ cd app
 gcloud builds submit \
     --region=$CLOUD_BUILD_REGION \
     --tag $REGION-docker.pkg.dev/$(gcloud config get-value project)/$APP_NAME/$APP_NAME:$APP_VERSION
+echo "#----------Docker image has been successfully built.----------#"
 
 # Create IAM Service Account for the app
 gcloud iam service-accounts create $APP_SERVICE_ACCOUNT_NAME
+echo "#----------Service Account has been successfully created.----------#"
 
 # Change the directory
 cd ..
@@ -72,3 +76,4 @@ gcloud run deploy $APP_NAME \
     --allow-unauthenticated \
     --region=$REGION \
     --service-account=$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com 
+echo "#----------The application has been successfully deployed.----------#"
