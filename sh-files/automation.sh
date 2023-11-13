@@ -14,6 +14,9 @@ APP_ARTIFACT_NAME="app"
 APP_NAME="app"
 APP_VERSION="latest"
 APP_SERVICE_ACCOUNT_NAME='app-service-account'
+BUCKET_NAME='matt-startup-script'
+STARTUP_SCRIPT_BUCKET_SA='startup-script-bucket-sa'
+STARTUP_SCRIPT_NAME='startup-script.sh'
 echo "#----------Exporting Environment Variables is done.----------#"
 
 # Create a static external ip address
@@ -23,13 +26,24 @@ echo "#----------Static IP Address has been successfully created.----------#"
 # Print the Static IP Address
 # gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2
 
-# Create an instance with these specifications
-gcloud compute instances create $DB_NAME \
-    --machine-type=$MACHINE_TYPE --zone=$ZONE --tags=$TAGS \
-    --boot-disk-size=$BOOT_DISK_SIZE \
-    --no-scopes --no-service-account \
-    --metadata-from-file=startup-script=startup-script.sh \
-    --network-interface=address=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
+# Make a bucket
+gcloud storage buckets create gs://$BUCKET_NAME
+
+# Copy the file to Cloud Storage
+gcloud storage cp startup-script.sh gs://$BUCKET_NAME
+
+# Create a service account
+gcloud iam service-accounts create $STARTUP_SCRIPT_BUCKET_SA
+
+# Enable Cloud Resource Manager
+gcloud services enable cloudresourcemanager.googleapis.com
+
+# Add IAM Policy Binding to the Bucket Service Account
+gcloud projects add-iam-policy-binding \
+    $(gcloud config get project) \
+    --member=serviceAccount:$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com \
+    --role=roles/storage.objectViewer
+
 echo "#----------Compute Instance has been successfully created.----------#"
 
 # Create a firewall (GCP)
