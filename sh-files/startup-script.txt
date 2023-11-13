@@ -9,6 +9,9 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
 
+# Remove all running docker 
+docker rm -f $(docker ps -aq)
+
 # Create a database 
 docker run -d \
     --name postgres-sql \
