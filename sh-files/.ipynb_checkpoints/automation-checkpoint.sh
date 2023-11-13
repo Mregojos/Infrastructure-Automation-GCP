@@ -60,6 +60,8 @@ gcloud builds submit \
     --tag $REGION-docker.pkg.dev/$(gcloud config get-value project)/$APP_NAME/$APP_NAME:$APP_VERSION
 echo "#----------Docker image has been successfully built.----------#"
 
+# For Cloud Run Deploy, use a Service Account with Cloud Run Admin
+# For Clou Run Deployed Add (Service), use a Service Account with Vertex AI User or with custom IAM Role 
 # Create IAM Service Account for the app
 gcloud iam service-accounts create $APP_SERVICE_ACCOUNT_NAME
 echo "#----------Service Account has been successfully created.----------#"
