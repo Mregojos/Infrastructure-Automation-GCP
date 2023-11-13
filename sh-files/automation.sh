@@ -17,14 +17,11 @@ APP_SERVICE_ACCOUNT_NAME='app-service-account'
 BUCKET_NAME='matt-startup-script'
 STARTUP_SCRIPT_BUCKET_SA='startup-script-bucket-sa'
 STARTUP_SCRIPT_NAME='startup-script.sh'
-echo "#----------Exporting Environment Variables is done.----------#"
+echo -e "\n #----------Exporting Environment Variables is done.----------# \n"
 
 # Create a static external ip address
 gcloud compute addresses create $STATIC_IP_ADDRESS_NAME --region $REGION
-echo "#----------Static IP Address has been successfully created.----------#"
-
-# Print the Static IP Address
-# gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2
+echo -e "#\n ----------Static IP Address has been successfully created.----------# \n"
 
 # Make a bucket
 gcloud storage buckets create gs://$BUCKET_NAME
@@ -44,6 +41,15 @@ gcloud projects add-iam-policy-binding \
     --member=serviceAccount:$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com \
     --role=roles/storage.objectViewer
 
+# Print the Static IP Address
+# gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2
+
+# Create an instance with these specifications
+gcloud compute instances create $DB_NAME \
+    --machine-type=$MACHINE_TYPE --zone=$ZONE --tags=$TAGS \
+    --boot-disk-size=$BOOT_DISK_SIZE \
+    --service-account=$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com  \
+    --metadata=startup-script-url=gs://$BUCKET_NAME/$STARTUP_SCRIPT_NAME    
 echo "#----------Compute Instance has been successfully created.----------#"
 
 # Create a firewall (GCP)
