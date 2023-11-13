@@ -19,6 +19,11 @@ STARTUP_SCRIPT_BUCKET_SA='startup-script-bucket-sa'
 STARTUP_SCRIPT_NAME='startup-script.sh'
 echo -e "\n #----------Exporting Environment Variables is done.----------# \n"
 
+# Enable Artifact Registry, Cloud Build, and Cloud Run, Vertex AI
+# !gcloud services list --available
+gcloud services enable cloudbuild.googleapis.com artifactregistry.googleapis.com run.googleapis.com aiplatform.googleapis.com cloudresourcemanager.googleapis.com
+echo -e "\n #----------Services have been successfully enabled.----------# \n"
+
 # Create a static external ip address
 gcloud compute addresses create $STATIC_IP_ADDRESS_NAME --region $REGION
 echo -e "#\n ----------Static IP Address has been successfully created.----------# \n"
@@ -31,9 +36,6 @@ gcloud storage cp startup-script.sh gs://$BUCKET_NAME
 
 # Create a service account
 gcloud iam service-accounts create $STARTUP_SCRIPT_BUCKET_SA
-
-# Enable Cloud Resource Manager
-gcloud services enable cloudresourcemanager.googleapis.com
 
 # Add IAM Policy Binding to the Bucket Service Account
 gcloud projects add-iam-policy-binding \
@@ -49,19 +51,15 @@ gcloud compute instances create $DB_NAME \
     --machine-type=$MACHINE_TYPE --zone=$ZONE --tags=$TAGS \
     --boot-disk-size=$BOOT_DISK_SIZE \
     --service-account=$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com  \
-    --metadata=startup-script-url=gs://$BUCKET_NAME/$STARTUP_SCRIPT_NAME    
-echo "#----------Compute Instance has been successfully created.----------#"
+    --metadata=startup-script-url=gs://$BUCKET_NAME/$STARTUP_SCRIPT_NAME \
+    --network-interface=address=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
+echo -e "\n #----------Compute Instance has been successfully created.----------# \n"
 
 # Create a firewall (GCP)
 gcloud compute --project=$(gcloud config get project) firewall-rules create $FIREWALL_RULES_NAME \
     --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:5000 --source-ranges=0.0.0.0/0 \
     --target-tags=$TAGS
-echo "#----------Firewall Rules has been successfully created.----------#"
-
-# Enable Artifact Registry, Cloud Build, and Cloud Run, Vertex AI
-# !gcloud services list --available
-gcloud services enable cloudbuild.googleapis.com artifactregistry.googleapis.com run.googleapis.com aiplatform.googleapis.com
-echo "#----------Services has been successfully enabled.----------#"
+echo -e "\n #----------Firewall Rules has been successfully created.----------# \n"
 
 # Create a Docker repository in Artifact Registry
 gcloud artifacts repositories create $APP_ARTIFACT_NAME \
