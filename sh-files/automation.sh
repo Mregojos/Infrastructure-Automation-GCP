@@ -73,7 +73,7 @@ gcloud artifacts repositories create $APP_ARTIFACT_NAME \
     --description="Docker repository"
 echo -e "\n #----------Artifact Repository has been successfully created.----------# \n"
 
-# Check if the path is correct
+# Change the directory
 cd ..
 cd app
 
