@@ -1,4 +1,5 @@
 # Infrastructure Automation using Shell Scripting and gcloud CLI
+# sh automation.sh
 
 # Environment Variables
 DB_NAME="db"
