@@ -84,6 +84,12 @@ echo -e "\n #----------Docker image has been successfully built.----------# \n"
 gcloud iam service-accounts create $APP_SERVICE_ACCOUNT_NAME
 echo -e "\n #----------Service Account has been successfully created.----------# \n"
 
+# Add IAM Policy Binding to the App Service Account
+gcloud projects add-iam-policy-binding \
+    $(gcloud config get project) \
+    --member=serviceAccount:$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com \
+    --role=roles/aiplatform.user
+    
 # Change the directory
 cd ..
 cd sh-files
