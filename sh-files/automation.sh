@@ -66,7 +66,7 @@ gcloud artifacts repositories create $APP_ARTIFACT_NAME \
     --repository-format=docker \
     --location=$REGION \
     --description="Docker repository"
-echo "#----------Artifact Repository has been successfully created.----------#"
+echo -e "\n #----------Artifact Repository has been successfully created.----------# \n"
 
 # Check if the path is correct
 cd ..
@@ -76,13 +76,13 @@ cd app
 gcloud builds submit \
     --region=$CLOUD_BUILD_REGION \
     --tag $REGION-docker.pkg.dev/$(gcloud config get-value project)/$APP_NAME/$APP_NAME:$APP_VERSION
-echo "#----------Docker image has been successfully built.----------#"
+echo -e "\n #----------Docker image has been successfully built.----------# \n"
 
 # For Cloud Run Deploy, use a Service Account with Cloud Run Admin
 # For Clou Run Deployed Add (Service), use a Service Account with Vertex AI User or with custom IAM Role 
 # Create IAM Service Account for the app
 gcloud iam service-accounts create $APP_SERVICE_ACCOUNT_NAME
-echo "#----------Service Account has been successfully created.----------#"
+echo -e "\n #----------Service Account has been successfully created.----------# \n"
 
 # Change the directory
 cd ..
