@@ -1,6 +1,19 @@
 # Infrastructure Automation using Shell Scripting and gcloud CLI
 # sh automation.sh
 
+# Prerequisites
+# | The Account should have accessed to:
+# * Compute Engine
+# * Storage Bucket
+# * Artifact Registry
+# * Cloud Build
+# * Cloud Run
+
+# | IAM Roles
+# * Editor
+# * Cloud Run Admin
+# * (IAM) Security Admin   
+
 # Environment Variables
 DB_NAME="db"
 MACHINE_TYPE="e2-micro"
