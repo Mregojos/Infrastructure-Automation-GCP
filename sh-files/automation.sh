@@ -30,18 +30,22 @@ echo -e "#\n ----------Static IP Address has been successfully created.---------
 
 # Make a bucket
 gcloud storage buckets create gs://$BUCKET_NAME
+echo -e "#\n ----------THe bucket has been successfully created.----------# \n"
 
 # Copy the file to Cloud Storage
 gcloud storage cp startup-script.sh gs://$BUCKET_NAME
+echo -e "#\n ----------Startup script has been successfully copied.----------# \n"
 
 # Create a service account
 gcloud iam service-accounts create $STARTUP_SCRIPT_BUCKET_SA
+echo -e "#\n ----------Bucket Service Account has been successfully created.----------# \n"
 
 # Add IAM Policy Binding to the Bucket Service Account
 gcloud projects add-iam-policy-binding \
     $(gcloud config get project) \
     --member=serviceAccount:$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com \
     --role=roles/storage.objectViewer
+echo -e "#\n ----------Bucket Service Account IAM has been successfully binded.----------# \n"
 
 # Print the Static IP Address
 # gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2
@@ -89,7 +93,8 @@ gcloud projects add-iam-policy-binding \
     $(gcloud config get project) \
     --member=serviceAccount:$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com \
     --role=roles/aiplatform.user
-    
+echo -e "\n #----------App Service Account has been successfully binded.----------# \n"
+
 # Change the directory
 cd ..
 cd sh-files
