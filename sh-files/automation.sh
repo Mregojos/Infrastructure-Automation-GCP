@@ -19,7 +19,6 @@ BUCKET_NAME='matt-startup-script'
 STARTUP_SCRIPT_BUCKET_SA='startup-script-bucket-sa'
 STARTUP_SCRIPT_NAME='startup-script.sh'
 echo -e "\n #----------Exporting Environment Variables is done.----------#"
-echo -e "\n #----------Exporting Environment Variables is done.----------#"
 
 # Enable Artifact Registry, Cloud Build, and Cloud Run, Vertex AI
 # !gcloud services list --available
