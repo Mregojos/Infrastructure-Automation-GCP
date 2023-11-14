@@ -108,4 +108,4 @@ gcloud run deploy $APP_NAME \
     --allow-unauthenticated \
     --region=$REGION \
     --service-account=$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com 
-echo "#----------The application has been successfully deployed.----------#"
+echo -e "\n #----------The application has been successfully deployed.----------# \n"
