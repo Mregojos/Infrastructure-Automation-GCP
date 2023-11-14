@@ -18,35 +18,35 @@ APP_SERVICE_ACCOUNT_NAME='app-service-account'
 BUCKET_NAME='matt-startup-script'
 STARTUP_SCRIPT_BUCKET_SA='startup-script-bucket-sa'
 STARTUP_SCRIPT_NAME='startup-script.sh'
-echo -e "\n #----------Exporting Environment Variables is done.----------#"
+echo "\n #----------Exporting Environment Variables is done.----------#"
 
 # Enable Artifact Registry, Cloud Build, and Cloud Run, Vertex AI
 # !gcloud services list --available
 gcloud services enable cloudbuild.googleapis.com artifactregistry.googleapis.com run.googleapis.com aiplatform.googleapis.com cloudresourcemanager.googleapis.com
-echo -e "\n #----------Services have been successfully enabled.----------#"
+echo "\n #----------Services have been successfully enabled.----------#"
 
 # Create a static external ip address
 gcloud compute addresses create $STATIC_IP_ADDRESS_NAME --region $REGION
-echo -e "#\n ----------Static IP Address has been successfully created.----------#"
+echo "#\n ----------Static IP Address has been successfully created.----------#"
 
 # Make a bucket
 gcloud storage buckets create gs://$BUCKET_NAME
-echo -e "#\n ----------THe bucket has been successfully created.----------#"
+echo "#\n ----------THe bucket has been successfully created.----------#"
 
 # Copy the file to Cloud Storage
 gcloud storage cp startup-script.sh gs://$BUCKET_NAME
-echo -e "#\n ----------Startup script has been successfully copied.----------#"
+echo "#\n ----------Startup script has been successfully copied.----------#"
 
 # Create a service account
 gcloud iam service-accounts create $STARTUP_SCRIPT_BUCKET_SA
-echo -e "#\n ----------Bucket Service Account has been successfully created.----------#"
+echo "#\n ----------Bucket Service Account has been successfully created.----------#"
 
 # Add IAM Policy Binding to the Bucket Service Account
 gcloud projects add-iam-policy-binding \
     $(gcloud config get project) \
     --member=serviceAccount:$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com \
     --role=roles/storage.objectViewer
-echo -e "#\n ----------Bucket Service Account IAM has been successfully binded.----------#"
+echo "#\n ----------Bucket Service Account IAM has been successfully binded.----------#"
 
 # Print the Static IP Address
 # gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2
@@ -58,20 +58,20 @@ gcloud compute instances create $DB_NAME \
     --service-account=$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com  \
     --metadata=startup-script-url=gs://$BUCKET_NAME/$STARTUP_SCRIPT_NAME \
     --network-interface=address=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
-echo -e "\n #----------Compute Instance has been successfully created.----------#"
+echo "\n #----------Compute Instance has been successfully created.----------#"
 
 # Create a firewall (GCP)
 gcloud compute --project=$(gcloud config get project) firewall-rules create $FIREWALL_RULES_NAME \
     --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:5000 --source-ranges=0.0.0.0/0 \
     --target-tags=$TAGS
-echo -e "\n #----------Firewall Rules has been successfully created.----------#"
+echo "\n #----------Firewall Rules has been successfully created.----------#"
 
 # Create a Docker repository in Artifact Registry
 gcloud artifacts repositories create $APP_ARTIFACT_NAME \
     --repository-format=docker \
     --location=$REGION \
     --description="Docker repository"
-echo -e "\n #----------Artifact Repository has been successfully created.----------#"
+echo "\n #----------Artifact Repository has been successfully created.----------#"
 
 # Change the directory
 cd ..
@@ -81,20 +81,20 @@ cd app
 gcloud builds submit \
     --region=$CLOUD_BUILD_REGION \
     --tag $REGION-docker.pkg.dev/$(gcloud config get-value project)/$APP_NAME/$APP_NAME:$APP_VERSION
-echo -e "\n #----------Docker image has been successfully built.----------#"
+echo "\n #----------Docker image has been successfully built.----------#"
 
 # For Cloud Run Deploy, use a Service Account with Cloud Run Admin
 # For Clou Run Deployed Add (Service), use a Service Account with Vertex AI User or with custom IAM Role 
 # Create IAM Service Account for the app
 gcloud iam service-accounts create $APP_SERVICE_ACCOUNT_NAME
-echo -e "\n #----------Service Account has been successfully created.----------#"
+echo "\n #----------Service Account has been successfully created.----------#"
 
 # Add IAM Policy Binding to the App Service Account
 gcloud projects add-iam-policy-binding \
     $(gcloud config get project) \
     --member=serviceAccount:$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com \
     --role=roles/aiplatform.user
-echo -e "\n #----------App Service Account has been successfully binded.----------#"
+echo "\n #----------App Service Account has been successfully binded.----------#"
 
 # Change the directory
 cd ..
@@ -108,4 +108,4 @@ gcloud run deploy $APP_NAME \
     --allow-unauthenticated \
     --region=$REGION \
     --service-account=$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com 
-echo -e "\n #----------The application has been successfully deployed.----------#"
+echo "\n #----------The application has been successfully deployed.----------#"
