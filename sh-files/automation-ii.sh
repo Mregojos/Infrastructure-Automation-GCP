@@ -11,9 +11,8 @@
 
 # | IAM Roles
 # * Editor
+# * Cloud Run Admin
 # * (IAM) Security Admin   
-# [* Cloud Run Admin]
-
 
 # Environment Variables
 DB_NAME="db"
@@ -113,7 +112,6 @@ echo "\n #----------App Service Account has been successfully binded.----------#
 # Change the directory
 cd ..
 cd sh-files
-touch env.yaml
 
 # Deploy the app using Cloud Run
 gcloud run deploy $APP_NAME \
