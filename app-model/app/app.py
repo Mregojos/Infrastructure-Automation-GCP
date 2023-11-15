@@ -72,8 +72,8 @@ with columnA:
     input_name = st.text_input("Your Name:")
     # agent = st.toggle("**Let's go**")
     save = st.button("Save")
-    if save:
-        st.success(f"Your name is :blue[{input_name}]")
+    if save or input_name:
+        st.info(f"Your name is :blue[{input_name}]")
 
 agent = st.toggle("**Let's go**")
 prompt = ""
