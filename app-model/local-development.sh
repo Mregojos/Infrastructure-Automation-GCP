@@ -41,12 +41,12 @@ gcloud compute --project=$(gcloud config get project) firewall-rules create $FIR
 # docker exec -it $APP_NAME sh
 
 # Environment Variables for the app
-echo """DBNAME="matt" 
-USER="matt" 
-HOST="" 
-DBPORT="5000" 
-DBPASSWORD="password" 
-PROJECT_NAME="matt-0706"
+echo """DBNAME=matt
+USER='matt' 
+HOST='' 
+DBPORT='5000'
+DBPASSWORD='password' 
+PROJECT_NAME=$(gcloud config get project)
 """ > app-dev/env.sh
 
 # Enable Artifact Registry, Cloud Build, and Cloud Run, Vertex AI
