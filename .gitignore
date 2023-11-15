@@ -4,3 +4,6 @@
 env.yaml
 ./env.yaml
 ./*/env.yaml
+env.sh
+./env.sh
+./*/env.sh
