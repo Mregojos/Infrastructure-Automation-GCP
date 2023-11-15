@@ -75,19 +75,20 @@ with columnA:
 
 agent = st.toggle("**Let's go**")
 prompt = ""
+show = ""
 if agent:
     if input_name is not "":
         prompt = st.chat_input("Talk to my agent")
-        Reset = st.button(":red[Reset Conversation]")
-        Prune = st.button(":red[Prune History]")
-        if Prune:
+        reset = st.button(":red[Reset Conversation]")
+        prune = st.button(":red[Prune History]")
+        if prune:
             cur.execute(f"""
                         DELETE  
                         FROM chats
                         WHERE name='{input_name}'
                         """)
             con.commit()
-            st.success(f"History by {input_name} has successfully deleted.")
+            st.info(f"History by {input_name} has successfully deleted.")
             
     else:
         st.info("Save your name first.")
@@ -137,6 +138,20 @@ with columnB:
             st.info("Start the conversation now by saving your name and toggling the Let's go toggle.")
         if agent: 
             st.info("You can now start the conversation by prompting to the text bar. Enjoy. :smile:")
+        with st.expander(f"See Previous Conversation for {input_name}"):
+            cur.execute(f"""
+                        SELECT * 
+                        FROM chats
+                        WHERE name='{input_name}'
+                        ORDER BY time ASC
+                        """)
+            for id, name, prompt, output, time in cur.fetchall():
+                message = st.chat_message("user")
+                message.write(f":blue[{name}]: {prompt}")
+                message.caption(f"{time}")
+                message = st.chat_message("assistant")
+                message.write(output)
+                message.caption(f"{time}")
 
             
 
