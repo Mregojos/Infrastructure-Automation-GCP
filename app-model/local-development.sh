@@ -28,8 +28,19 @@ docker run -p 8000:80 \
 cd app-dev
 # Build
 docker build -t $APP_NAME .
+
+# Environment Variables for the app
+echo """DBNAME='matt'
+USER='matt' 
+HOST='' 
+DBPORT='5000'
+DBPASSWORD='password' 
+PROJECT_NAME='$(gcloud config get project)'
+""" > env.sh
+
 # Run
-docker run -d -p 9000:9000 -v $(pwd):/app --name $APP_NAME $APP_NAME
+docker run -d -p 9000:9000 -v $(pwd):/app --env-file env.sh --name $APP_NAME $APP_NAME
+
 # Create a firewall (GCP)
 gcloud compute --project=$(gcloud config get project) firewall-rules create $FIREWALL_RULES_NAME \
     --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:5000,tcp:8000,tcp:9000 --source-ranges=0.0.0.0/0 
@@ -40,14 +51,7 @@ gcloud compute --project=$(gcloud config get project) firewall-rules create $FIR
 # Docker exec
 # docker exec -it $APP_NAME sh
 
-# Environment Variables for the app
-echo """DBNAME=matt
-USER='matt' 
-HOST='' 
-DBPORT='5000'
-DBPASSWORD='password' 
-PROJECT_NAME=$(gcloud config get project)
-""" > app-dev/env.sh
+
 
 # Enable Artifact Registry, Cloud Build, and Cloud Run, Vertex AI
 # !gcloud services list --available
