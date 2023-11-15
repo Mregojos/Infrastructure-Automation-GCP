@@ -123,7 +123,11 @@ with columnB:
                 message.write(output)
                 message.caption(f"{time}")
     else:
-        st.info("Start the conversation now by saving your name and toggling the Let's go toggle.")
+        if not agent:
+            st.info("Start the conversation now by saving your name and toggling the Let's go toggle.")
+        if agent: 
+            st.info("You can now start the conversation by prompting to the text bar. Enjoy. :smile:")
+
             
 
 # Close Connection
