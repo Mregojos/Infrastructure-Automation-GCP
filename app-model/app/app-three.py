@@ -29,7 +29,7 @@ st.set_page_config(page_title="Matt Cloud Tech",
 # Title
 st.title("Pre-Trained Model Deployment")
 
-# Connect to a database
+#----------Connect to a database---------#
 con = psycopg2.connect(f"""
                        dbname={DBNAME}
                        user={USER}
@@ -42,7 +42,24 @@ cur = con.cursor()
 cur.execute("CREATE TABLE IF NOT EXISTS chats(id serial PRIMARY KEY, name varchar, prompt varchar, output varchar, time varchar)")
 con.commit()
 
-#----------Vertex AI----------#
+#----------Vertex AI Chat----------#
+vertexai.init(project=PROJECT_NAME, location="us-central1")
+parameters = {
+    "candidate_count": 1,
+    "max_output_tokens": 1024,
+    "temperature": 0.2,
+    "top_p": 0.8,
+    "top_k": 40
+}
+model = TextGenerationModel.from_pretrained("text-bison")
+
+# response = model.predict(
+#    """Hi""",
+#    **parameters
+# )
+# st.write(f"Response from Model: {response.text}")
+
+#----------Vertex AI Code----------#
 vertexai.init(project=PROJECT_NAME, location="us-central1")
 parameters = {
     "candidate_count": 1,
@@ -69,6 +86,7 @@ with columnA:
     st.caption("### Chat with my agent")
     st.write(f":violet[Your chat will be stored in a database, use the same name to see your past conversations.]")
     st.caption(":warning: :red[Do not add sensitive data.]")
+    model = st.selectbox("For Chat or Code Generation?", ('Chat', 'Code'))
     input_name = st.text_input("Your Name:")
     # agent = st.toggle("**Let's go**")
     save = st.button("Save")
