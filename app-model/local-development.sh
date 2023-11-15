@@ -24,7 +24,7 @@ docker run -p 8000:80 \
     -d dpage/pgadmin4
 
 # For App
-cd app
+# cd app
 # Build
 docker build -t $APP_NAME .
 # Run
@@ -37,14 +37,19 @@ gcloud compute --project=$(gcloud config get project) firewall-rules create $FIR
 # Remove docker container all
 # docker rm -f $(docker ps -aq)
 # Docker exec
-docker exec -it $APP_NAME sh
+# docker exec -it $APP_NAME sh
 
 
 # Environment Variables for the app
-echo """DBNAME="matt" 
-USER="matt" 
-HOST="" 
-DBPORT="5000" 
-DBPASSWORD="password" 
-PROJECT_NAME="project"
-""" > env.sh
+# echo """DBNAME="matt" 
+# USER="matt" 
+# HOST="" 
+# DBPORT="5000" 
+# DBPASSWORD="password" 
+# PROJECT_NAME="project"
+# """ > env.sh
+
+# Enable Artifact Registry, Cloud Build, and Cloud Run, Vertex AI
+# !gcloud services list --available
+gcloud services enable cloudbuild.googleapis.com artifactregistry.googleapis.com run.googleapis.com aiplatform.googleapis.com cloudresourcemanager.googleapis.com
+echo "\n #----------Services have been successfully enabled.----------# \n"
