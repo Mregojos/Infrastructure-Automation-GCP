@@ -25,7 +25,7 @@ st.set_page_config(page_title="Matt Cloud Tech",
                        'About':"# Matt Cloud Tech"})
 
 # Title
-st.title("Pre-trained Model Deployment")
+st.title("Pre-Trained Model Deployment")
 
 # Connect to a database
 con = psycopg2.connect(f"""
@@ -88,7 +88,7 @@ if agent:
                         WHERE name='{input_name}'
                         """)
             con.commit()
-            st.info(f"History by {input_name} has successfully deleted.")
+            st.info(f"History by {input_name} is successfully deleted.")
             
     else:
         st.info("Save your name first.")
