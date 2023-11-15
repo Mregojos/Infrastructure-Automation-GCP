@@ -116,6 +116,7 @@ if agent:
     else:
         st.info("Save your name first.")
 
+prompt_history = "Hi"
 with columnB:
     import time
     st.write("### :gray[Latest conversation]")
@@ -145,8 +146,8 @@ with columnB:
                             ORDER BY time ASC
                             """)
                     for id, name, prompt, output, time in cur.fetchall():
-                        prompt = " " + prompt
-                    response = chat.send_message(prompt, **chat_parameters)
+                        prompt_history = prompt_history + " " + prompt
+                    response = chat.send_message(prompt_history, **chat_parameters)
                     response = chat.send_message(prompt_user, **chat_parameters)
                     output = response.text
                     message.write(output)
