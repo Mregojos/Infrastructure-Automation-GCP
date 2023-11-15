@@ -39,7 +39,7 @@ con = psycopg2.connect(f"""
                        """)
 cur = con.cursor()
 # Create a table if not exists
-cur.execute("CREATE TABLE IF NOT EXISTS chats(id serial PRIMARY KEY, name varchar, prompt varchar, output varchar, time varchar)")
+cur.execute("CREATE TABLE IF NOT EXISTS chats(id serial PRIMARY KEY, name varchar, prompt_user varchar, output varchar, time varchar)")
 con.commit()
 
 #----------Vertex AI Chat----------#
@@ -100,8 +100,6 @@ with columnA:
         st.info(f"Your name is :blue[{input_name}]")
 
 agent = st.toggle("**Let's go**")
-prompt = ""
-show = ""
 if agent:
     if input_name is not "":
         prompt = st.chat_input("Talk to my agent")
@@ -115,73 +113,79 @@ if agent:
                         """)
             con.commit()
             st.info(f"History by {input_name} is successfully deleted.")
-            
     else:
         st.info("Save your name first.")
 
-import time
 with columnB:
+    import time
     st.write("### :gray[Latest conversation]")
-    if prompt:
-        time = time.strftime("Date: %Y-%m-%d | Time: %H:%M:%S UTC")
-        message = st.chat_message("user")
-        message.write(f":blue[{input_name}]: {prompt}")
-        message.caption(f"{time}")
-        message = st.chat_message("assistant")
-        if model == "Text":
-            response = text_model.predict(prompt,
-                **text_parameters
-            )
-            output = response.text
-            message.write(output)
-            message.caption(f"{time}")
-            st.divider()
-        elif model == "Chat":
-            response = chat.send_message(prompt, **chat_parameters)
-            output = response.text
-            message.write(output)
-            message.caption(f"{time} | Model: {model}")
-            st.divider()
-
-        ### Insert into a database
-        SQL = "INSERT INTO chats (name, prompt, output, time) VALUES(%s, %s, %s, %s);"
-        data = (input_name, prompt, output, time)
-        cur.execute(SQL, data)
-        con.commit()
-        
-        with st.expander(f"See Previous Conversation for {input_name}"):
-            cur.execute(f"""
-                        SELECT * 
-                        FROM chats
-                        WHERE name='{input_name}'
-                        ORDER BY time ASC
-                        """)
-            for id, name, prompt, output, time in cur.fetchall():
+    if agent:
+        if input_name is not "":
+            if prompt:
+                time = time.strftime("Date: %Y-%m-%d | Time: %H:%M:%S UTC")
                 message = st.chat_message("user")
-                message.write(f":blue[{name}]: {prompt}")
+                message.write(f":blue[{input_name}]: {prompt}")
                 message.caption(f"{time}")
                 message = st.chat_message("assistant")
-                message.write(output)
-                message.caption(f"{time}")
-    else:
-        if not agent:
-            st.info("Start the conversation now by saving your name and toggling the Let's go toggle.")
-        if agent: 
-            st.info("You can now start the conversation by prompting to the text bar. Enjoy. :smile:")
-            with st.expander(f"See Previous Conversation for {input_name}"):
-                cur.execute(f"""
-                            SELECT * 
-                            FROM chats
-                            WHERE name='{input_name}'
-                            ORDER BY time ASC
-                            """)
-                for id, name, prompt, output, time in cur.fetchall():
-                    message = st.chat_message("user")
-                    message.write(f":blue[{name}]: {prompt}")
-                    message.caption(f"{time}")
-                    message = st.chat_message("assistant")
+
+                if model == "Text":
+                    response = text_model.predict(prompt,
+                        **text_parameters
+                    )
+                    output = response.text
                     message.write(output)
                     message.caption(f"{time}")
+                    st.divider()
+
+                elif model == "Chat":
+                    # response = chat.send_message(prompt_history, **chat_parameters)
+                    response = chat.send_message(prompt, **chat_parameters)
+                    output = response.text
+                    message.write(output)
+                    message.caption(f"{time} | Model: {model}")
+                    st.divider()
+
+                ### Insert into a database
+                SQL = "INSERT INTO chats (name, prompt, output, time) VALUES(%s, %s, %s, %s);"
+                data = (input_name, prompt, output, time)
+                cur.execute(SQL, data)
+                con.commit()
+
+                with st.expander(f"See Previous Conversation for {input_name}"):
+                    cur.execute(f"""
+                                SELECT * 
+                                FROM chats
+                                WHERE name='{input_name}'
+                                ORDER BY time ASC
+                                """)
+                    for id, name, prompt, output, time in cur.fetchall():
+                        message = st.chat_message("user")
+                        message.write(f":blue[{name}]: {prompt}")
+                        message.caption(f"{time}")
+                        message = st.chat_message("assistant")
+                        message.write(output)
+                        message.caption(f"{time}")
+
+
+            else:
+                if not agent:
+                    st.info("Start the conversation now by saving your name and toggling the Let's go toggle.")
+                if agent: 
+                    st.info("You can now start the conversation by prompting to the text bar. Enjoy. :smile:")
+                    with st.expander(f"See Previous Conversation for {input_name}"):
+                        cur.execute(f"""
+                                    SELECT * 
+                                    FROM chats
+                                    WHERE name='{input_name}'
+                                    ORDER BY time ASC
+                                    """)
+                        for id, name, prompt, output, time in cur.fetchall():
+                            message = st.chat_message("user")
+                            message.write(f":blue[{name}]: {prompt}")
+                            message.caption(f"{time}")
+                            message = st.chat_message("assistant")
+                            message.write(output)
+                            message.caption(f"{time}")
 
 # Close Connection
 cur.close()
