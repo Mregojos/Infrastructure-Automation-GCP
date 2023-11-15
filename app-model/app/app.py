@@ -79,6 +79,16 @@ if agent:
     if input_name is not "":
         prompt = st.chat_input("Talk to my agent")
         Reset = st.button(":red[Reset Conversation]")
+        Prune = st.button(":red[Prune History]")
+        if Prune:
+            cur.execute(f"""
+                        DELETE  
+                        FROM chats
+                        WHERE name='{input_name}'
+                        """)
+            con.commit()
+            st.success(f"History by {input_name} has successfully deleted.")
+            
     else:
         st.info("Save your name first.")
 
