@@ -8,7 +8,23 @@ APP_NAME="app"
 # APP_NAME="simple-app"
 FIREWALL_RULES_NAME="ports"
 
+# Database
+# With volume/data connected
+# cd app-model 
+docker run -d \
+    --name postgres-sql \
+    -e POSTGRES_USER=matt \
+    -e POSTGRES_PASSWORD=password \
+    -v $(pwd)/data/:/var/lib/postgresql/data/ \
+    -p 5000:5432 \
+    postgres
+docker run -p 8000:80 \
+    -e 'PGADMIN_DEFAULT_EMAIL=matt@example.com' \
+    -e 'PGADMIN_DEFAULT_PASSWORD=password' \
+    -d dpage/pgadmin4
+
 # For App
+cd app
 # Build
 docker build -t $APP_NAME .
 # Run
@@ -23,19 +39,6 @@ gcloud compute --project=$(gcloud config get project) firewall-rules create $FIR
 # Docker exec
 docker exec -it $APP_NAME sh
 
-# Database
-# With volume/data connected
-docker run -d \
-    --name postgres-sql \
-    -e POSTGRES_USER=matt \
-    -e POSTGRES_PASSWORD=password \
-    -v $(pwd)/data/:/var/lib/postgresql/data/ \
-    -p 5000:5432 \
-    postgres
-docker run -p 8000:80 \
-    -e 'PGADMIN_DEFAULT_EMAIL=matt@example.com' \
-    -e 'PGADMIN_DEFAULT_PASSWORD=password' \
-    -d dpage/pgadmin4
 
 # Environment Variables for the app
 echo """DBNAME="matt" 
