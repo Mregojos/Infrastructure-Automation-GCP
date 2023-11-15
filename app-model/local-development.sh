@@ -34,9 +34,10 @@ docker run -p 8000:80 \
     -d dpage/pgadmin4
 
 # Environment Variables for the app
-DBNAME: "matt"
-USER: "matt"
-HOST: ""
-DBPORT: "5000"
-DBPASSWORD: "password"
-PROJECT_NAME: ""
+echo """DBNAME="matt" 
+USER="matt" 
+HOST="" 
+DBPORT="5000" 
+DBPASSWORD="password" 
+PROJECT_NAME="project"
+""" > env.sh
