@@ -1,7 +1,7 @@
-export DBNAME=matt 
-export USER=matt 
-export HOST= 
-export DBPORT=5000 
-export DBPASSWORD=password 
-export PROJECT_NAME=project
+DBNAME=matt 
+USER=matt 
+HOST= 
+DBPORT=5000 
+DBPASSWORD=password 
+PROJECT_NAME=project
 

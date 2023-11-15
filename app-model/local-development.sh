@@ -4,13 +4,14 @@
 # * To deply a pre-trained model on GCP
 
 # Environment Variables
-APP_NAME="app"
+APP_NAME="app-dev"
 # APP_NAME="simple-app"
 FIREWALL_RULES_NAME="ports"
 
 # Database
 # With volume/data connected
 # cd app-model 
+# cd app-model
 docker run -d \
     --name postgres-sql \
     -e POSTGRES_USER=matt \
@@ -23,8 +24,8 @@ docker run -p 8000:80 \
     -e 'PGADMIN_DEFAULT_PASSWORD=password' \
     -d dpage/pgadmin4
 
-# For App
-# cd app
+# For App Development
+cd app-dev
 # Build
 docker build -t $APP_NAME .
 # Run
@@ -39,17 +40,19 @@ gcloud compute --project=$(gcloud config get project) firewall-rules create $FIR
 # Docker exec
 # docker exec -it $APP_NAME sh
 
-
 # Environment Variables for the app
-# echo """DBNAME="matt" 
-# USER="matt" 
-# HOST="" 
-# DBPORT="5000" 
-# DBPASSWORD="password" 
-# PROJECT_NAME="project"
-# """ > env.sh
+echo """DBNAME="matt" 
+USER="matt" 
+HOST="" 
+DBPORT="5000" 
+DBPASSWORD="password" 
+PROJECT_NAME="matt-0706"
+""" > app-dev/env.sh
 
 # Enable Artifact Registry, Cloud Build, and Cloud Run, Vertex AI
 # !gcloud services list --available
 gcloud services enable cloudbuild.googleapis.com artifactregistry.googleapis.com run.googleapis.com aiplatform.googleapis.com cloudresourcemanager.googleapis.com
 echo "\n #----------Services have been successfully enabled.----------# \n"
+
+#----------Delete Resources----------#
+gcloud compute instances delete $DB_NAME --zone=$ZONE --quiet
