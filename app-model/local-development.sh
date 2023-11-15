@@ -18,6 +18,8 @@ gcloud compute --project=$(gcloud config get project) firewall-rules create $FIR
     --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:5000,tcp:8000,tcp:9000 --source-ranges=0.0.0.0/0 
 # Remove docker container
 # docker rm -f $APP_NAME
+# Docker exec
+docker exec -it $APP_NAME sh
 
 # Database
 # With volume/data connected
