@@ -139,15 +139,6 @@ with columnB:
             message.caption(f"{time}")
             st.divider()
         elif model == "Chat":
-            cur.execute(f"""
-                        SELECT prompt, output 
-                        FROM chats
-                        WHERE name='{input_name}'
-                        """)
-            for prompt, output in cur.fetchall():
-                st.write(prompt)
-            response = chat.send_message("My Favorite Color is White", **chat_parameters)
-            output = response.text
             response = chat.send_message(prompt, **chat_parameters)
             output = response.text
             message.write(output)
@@ -193,8 +184,6 @@ with columnB:
                     message = st.chat_message("assistant")
                     message.write(output)
                     message.caption(f"{time}")
-
-            
 
 # Close Connection
 cur.close()
