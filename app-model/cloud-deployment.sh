@@ -57,17 +57,17 @@ cd sh-files
 # Environment Variables for the app
 echo """
 DBNAME:
-    "matt"
+    'matt
 USER:
-    "matt"
+    'matt'
 HOST:
-    ""
+    ''
 DBPORT:
-    "5000"
+    '5000'
 DBPASSWORD:
-    "password"
+    'password
 PROJECT_NAME:
-    ""
+    '$(gcloud config get project)'
 """ > env.yaml
 
 
