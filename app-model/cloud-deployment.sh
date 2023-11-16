@@ -15,7 +15,7 @@ STATIC_IP_ADDRESS_NAME="db-static-ip-address"
 CLOUD_BUILD_REGION="us-west2"
 APP_ARTIFACT_NAME="app"
 # Change the APP_NAME
-APP_NAME="app-model-dev"
+APP_NAME="app-v-model-dev"
 APP_VERSION="latest"
 APP_SERVICE_ACCOUNT_NAME='app-service-account'
 BUCKET_NAME='matt-startup-script'

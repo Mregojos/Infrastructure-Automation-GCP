@@ -5,4 +5,4 @@ WORKDIR /app
 COPY . /app
 # ENV DBNAME="" USER="" HOST="" DBPORT="" DBPASSWORD="" PROJECT_NAME="" 
 EXPOSE 9000
-CMD ["streamlit", "run", "app-iv.py", "--server.address", "0.0.0.0", "--server.port", "9000"]
+CMD ["streamlit", "run", "app-v.py", "--server.address", "0.0.0.0", "--server.port", "9000"]

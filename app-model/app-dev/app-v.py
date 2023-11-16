@@ -135,58 +135,56 @@ elif credential is True and agent is True:
     
     if agent:
         prompt_user = st.chat_input("What do you want to talk about?")
-        if input_name is not "":
-            if prompt_user:
-                time = time.strftime("Date: %Y-%m-%d | Time: %H:%M:%S UTC")
-                cur.execute(f"""
-                            SELECT * 
-                            FROM chats
-                            WHERE name='{input_name}'
-                            ORDER BY time ASC
-                            """)
-                for id, name, prompt, output, model, datetime in cur.fetchall():
-                    message = st.chat_message("user")
-                    message.write(f":blue[{name}]: {prompt}")
-                    message.caption(f"{time}")
-                    message = st.chat_message("assistant")
-                    message.write(output)
-                    message.caption(f"{time}")
-                    
-                if model == "Chat":
-                    cur.execute(f"""
-                            SELECT * 
-                            FROM chats
-                            WHERE name='{input_name}'
-                            ORDER BY time ASC
-                            """)
-                    for id, name, prompt, output, model, datetime in cur.fetchall():
-                        prompt_history = prompt_history + "\n " + f"{name}: {prompt}" + "\n " + f"Model Output: {output}"
-                    response = chat.send_message(prompt_history, **chat_parameters)
-                    response = chat.send_message(prompt_user, **chat_parameters)
-                    output = response.text
-                    message.write(output)
-                    message.caption(f"{time} | Model: {model}")
-                    st.divider()
-                    
-                elif model == "Text":
-                    response = text_model.predict(prompt_user,
-                        **text_parameters
-                    )
-                    output = response.text
-                    message.write(output)
-                    message.caption(f"{time} | Model: {model}")
-                    st.divider()
+        if prompt_user:
+            time = time.strftime("Date: %Y-%m-%d | Time: %H:%M:%S UTC")
+            cur.execute(f"""
+                        SELECT * 
+                        FROM chats
+                        WHERE name='{input_name}'
+                        ORDER BY time ASC
+                        """)
+            for id, name, prompt, output, model, datetime in cur.fetchall():
+                message = st.chat_message("user")
+                message.write(f":blue[{name}]: {prompt}")
+                message.caption(f"{time}")
+                message = st.chat_message("assistant")
+                message.write(output)
+                message.caption(f"{time}")
 
-                ### Insert into a database
-                SQL = "INSERT INTO chats (name, prompt, output, model, time) VALUES(%s, %s, %s, %s);"
-                data = (input_name, prompt_user, output, model, time)
-                cur.execute(SQL, data)
-                con.commit()
+            if model == "Chat":
+                cur.execute(f"""
+                        SELECT * 
+                        FROM chats
+                        WHERE name='{input_name}'
+                        ORDER BY time ASC
+                        """)
+                for id, name, prompt, output, model, datetime in cur.fetchall():
+                    prompt_history = prompt_history + "\n " + f"{name}: {prompt}" + "\n " + f"Model Output: {output}"
+                response = chat.send_message(prompt_history, **chat_parameters)
+                response = chat.send_message(prompt_user, **chat_parameters)
+                output = response.text
+                message.write(output)
+                message.caption(f"{time} | Model: {model}")
+                st.divider()
+
+            elif model == "Text":
+                response = text_model.predict(prompt_user,
+                    **text_parameters
+                )
+                output = response.text
+                message.write(output)
+                message.caption(f"{time} | Model: {model}")
+                st.divider()
+
+            ### Insert into a database
+            SQL = "INSERT INTO chats (name, prompt, output, model, time) VALUES(%s, %s, %s, %s);"
+            data = (input_name, prompt_user, output, model, time)
+            cur.execute(SQL, data)
+            con.commit()
 
         else:
-            if agent: 
-                st.info("You can now start the conversation by prompting to the text bar. Enjoy. :smile:")
-                
+            st.info("You can now start the conversation by prompting to the text bar. Enjoy. :smile:")
+
 
 # Close Connection
 cur.close()
