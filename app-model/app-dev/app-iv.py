@@ -1,6 +1,6 @@
 # Version Four
 
-# Import libraries
+#----------Import libraries----------#
 import streamlit as st
 import psycopg2
 import os
@@ -9,13 +9,13 @@ import vertexai
 from vertexai.language_models import TextGenerationModel
 from vertexai.language_models import ChatModel, InputOutputTextPair
 
-# Database Credentials
+#----------Database Credentials----------#
 DBNAME=os.getenv("DBNAME") 
 USER=os.getenv("USER")
 HOST= os.getenv("HOST")
 DBPORT=os.getenv("DBPORT")
 DBPASSWORD=os.getenv("DBPASSWORD")
-# Cloud Credentials
+#----------Cloud Credentials----------#
 PROJECT_NAME=os.getenv("PROJECT_NAME")
 
 #----------Page Configuration----------# 
@@ -26,7 +26,7 @@ st.set_page_config(page_title="Matt Cloud Tech",
                        'About':"# Matt Cloud Tech"})
 
 # Title
-st.title("### Pre-Trained Model Deployment")
+st.header("Pre-Trained Model Deployment")
 
 #----------Connect to a database---------#
 con = psycopg2.connect(f"""
@@ -39,6 +39,7 @@ con = psycopg2.connect(f"""
 cur = con.cursor()
 # Create a table if not exists
 cur.execute("CREATE TABLE IF NOT EXISTS chats(id serial PRIMARY KEY, name varchar, prompt varchar, output varchar, model varchar, time varchar)")
+cur.execute("CREATE TABLE IF NOT EXISTS users(id serial PRIMARY KEY, name varchar, password varchar)")
 con.commit()
 
 #----------Vertex AI Chat----------#
@@ -78,45 +79,65 @@ text_model = TextGenerationModel.from_pretrained("text-bison")
 # )
 # st.write(f"Response from Model: {response.text}")
 
-#----------Agent----------#
-# Columns
-columnA, columnB = st.columns(2)
 
-# Column A
-with columnA:
+#----------Login----------#
+with st.sidebar:
     st.header(":computer: Agent ",divider="rainbow")
     st.caption("### Chat with my agent")
-    st.write(f":violet[Your chat will be stored in a database, use the same name to see your past conversations.]")
-    st.caption(":warning: :red[Do not add sensitive data.]")
-    model = st.selectbox("For Chat or Code Generation?", ('Chat', 'Code', 'Text'))
-    input_name = st.text_input("Your Name:")
-    # agent = st.toggle("**Let's go**")
-    save = st.button("Save")
-    if save or input_name:
-        st.info(f"Your name is :blue[{input_name}]")
+    # st.write("Sign-up or Login")
+    username = st.text_input("Your Username")
+    password = st.text_input("Password", type="password")
+    login = st.checkbox("Stay login")
+    credential = False
+    with st.container():
+        if login:
+            if username == "admin" and password == "password":
+                credential = True
+                st.write(f":violet[Your chat will be stored in a database, use the same name to see your past conversations.]")
+                st.caption(":warning: :red[Do not add sensitive data.]")
+                model = st.selectbox("Choose Chat, Code, or Text Generationt?", ('Chat', 'Code', 'Text'))
+                input_name = st.text_input("Your Name:")
+                # agent = st.toggle("**Let's go**")
+                save = st.button("Save")
+                if save or input_name:
+                    st.info(f"Your name for this conversation is :blue[{input_name}]")
+                agent = st.toggle("**:violet[Let's talk to Agent]**")
+                if agent:
+                    if input_name is not "":
 
-agent = st.toggle("**Let's go**")
-if agent:
-    if input_name is not "":
-        prompt_user = st.chat_input("Talk to my agent")
-        reset = st.button(":red[Reset Conversation]")
-        prune = st.button(":red[Prune History]")
-        if prune:
-            cur.execute(f"""
-                        DELETE  
-                        FROM chats
-                        WHERE name='{input_name}'
-                        """)
-            con.commit()
-            st.info(f"History by {input_name} is successfully deleted.")
-    else:
-        st.info("Save your name first.")
+                        reset = st.button(":red[Reset Conversation]")
+                        if reset:
+                            st.rerun()
+                        prune = st.button(":red[Prune History]")
+                        if prune:
+                            cur.execute(f"""
+                                        DELETE  
+                                        FROM chats
+                                        WHERE name='{input_name}'
+                                        """)
+                            con.commit()
+                            st.info(f"History by {input_name} is successfully deleted.")
+                    else:
+                        st.info("Save your name first.")
+            else:
+                st.info("Wrong credential")
 
-prompt_history = "Hi"
-with columnB:
+
+
+
+
+#----------Agent----------#
+if credential is False:
+    st.info("Login first, save your name, and toggle in the Let's talk to Agent")
+if credential is True:
+    st.info("Toggle the :violet[Let's talk to Agent] toggle to start the conversation. Enjoy chatting :smile:")
+elif credential is True and agent is True:
+    prompt_history = "Hi"
     import time
-    st.write("### :gray[Latest conversation]")
+    st.write("### :gray[Conversation]")
+    
     if agent:
+        prompt_user = st.chat_input("Talk to my agent")
         if input_name is not "":
             if prompt_user:
                 time = time.strftime("Date: %Y-%m-%d | Time: %H:%M:%S UTC")
@@ -184,11 +205,11 @@ with columnB:
                             """)
                 for id, name, prompt, output, model, time in cur.fetchall():
                     message = st.chat_message("user")
-                    message.write(f":blue[{name}]: {prompt}")
-                    message.caption(f"{time}")
-                    message = st.chat_message("assistant")
-                    message.write(output)
-                    message.caption(f"{time}")
+                message.write(f":blue[{name}]: {prompt}")
+                message.caption(f"{time}")
+                message = st.chat_message("assistant")
+                message.write(output)
+                message.caption(f"{time}")
 
 # Close Connection
 cur.close()
