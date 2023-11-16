@@ -12,10 +12,12 @@ BOOT_DISK_SIZE="30"
 TAGS="db"
 FIREWALL_RULES_NAME="ports"
 STATIC_IP_ADDRESS_NAME="db-static-ip-address"
-CLOUD_BUILD_REGION="us-west2"
-APP_ARTIFACT_NAME="app"
+
+
 # Change the APP_NAME
 APP_NAME="app-v-model-dev"
+CLOUD_BUILD_REGION="us-west2"
+APP_ARTIFACT_NAME="app"
 APP_VERSION="latest"
 APP_SERVICE_ACCOUNT_NAME='app-service-account'
 BUCKET_NAME='matt-startup-script'
@@ -37,7 +39,7 @@ cd app
 # build and submnit an image to Artifact Registry
 gcloud builds submit \
     --region=$CLOUD_BUILD_REGION \
-    --tag $REGION-docker.pkg.dev/$(gcloud config get-value project)/$APP_NAME/$APP_NAME:$APP_VERSION
+    --tag $REGION-docker.pkg.dev/$(gcloud config get-value project)/$APP_ARTIFACT_NAME/$APP_NAME:$APP_VERSION
 echo "\n #----------Docker image has been successfully built.----------# \n"
 
 # For Cloud Run Deploy, use a Service Account with Cloud Run Admin
@@ -79,7 +81,26 @@ PROJECT_NAME:
 gcloud run deploy $APP_NAME \
     --max-instances=1 --min-instances=1 --port=9000 \
     --env-vars-file=env.yaml \
-    --image=$REGION-docker.pkg.dev/$(gcloud config get project)/$APP_NAME/$APP_NAME:$APP_VERSION \
+    --image=$REGION-docker.pkg.dev/$(gcloud config get project)/$APP_ARTIFACT_NAME/$APP_NAME:$APP_VERSION \
+    --allow-unauthenticated \
+    --region=$REGION \
+    --service-account=$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com 
+echo "\n #----------The application has been successfully deployed.----------# \n"
+
+
+
+#----------Build and Run only----------#
+# build and submnit an image to Artifact Registry
+gcloud builds submit \
+    --region=$CLOUD_BUILD_REGION \
+    --tag $REGION-docker.pkg.dev/$(gcloud config get-value project)/$APP_ARTIFACT_NAME/$APP_NAME:$APP_VERSION
+echo "\n #----------Docker image has been successfully built.----------# \n"
+
+# Deploy the app using Cloud Run
+gcloud run deploy $APP_NAME \
+    --max-instances=1 --min-instances=1 --port=9000 \
+    --env-vars-file=env.yaml \
+    --image=$REGION-docker.pkg.dev/$(gcloud config get project)/$APP_ARTIFACT_NAME/$APP_NAME:$APP_VERSION \
     --allow-unauthenticated \
     --region=$REGION \
     --service-account=$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com 
