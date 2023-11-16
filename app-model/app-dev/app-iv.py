@@ -26,7 +26,7 @@ st.set_page_config(page_title="Matt Cloud Tech",
                        'About':"# Matt Cloud Tech"})
 
 # Title
-st.header("Pre-Trained Model Deployment")
+st.header("GCP Pre-Trained Model Deployment")
 
 #----------Connect to a database---------#
 con = psycopg2.connect(f"""
@@ -38,7 +38,7 @@ con = psycopg2.connect(f"""
                        """)
 cur = con.cursor()
 # Create a table if not exists
-cur.execute("CREATE TABLE IF NOT EXISTS chats(id serial PRIMARY KEY, name varchar, prompt varchar, output varchar, model varchar, time varchar)")
+cur.execute("CREATE TABLE IF NOT EXISTS chats(id serial PRIMARY KEY, name varchar, prompt varchar, output varchar, model varchar, datetime varchar)")
 cur.execute("CREATE TABLE IF NOT EXISTS users(id serial PRIMARY KEY, name varchar, password varchar)")
 con.commit()
 
@@ -99,12 +99,13 @@ with st.sidebar:
                 input_name = st.text_input("Your Name:")
                 # agent = st.toggle("**Let's go**")
                 save = st.button("Save")
-                if save or input_name:
+                if save and input_name:
                     st.info(f"Your name for this conversation is :blue[{input_name}]")
+                elif save and input_name == "":
+                    st.info("Save your name first.")
                 agent = st.toggle("**:violet[Let's talk to Agent]**")
                 if agent:
                     if input_name is not "":
-
                         reset = st.button(":red[Reset Conversation]")
                         if reset:
                             st.rerun()
@@ -117,55 +118,59 @@ with st.sidebar:
                                         """)
                             con.commit()
                             st.info(f"History by {input_name} is successfully deleted.")
-                    else:
-                        st.info("Save your name first.")
+
             else:
                 st.info("Wrong credential")
 
-
-
-
-
 #----------Agent----------#
 if credential is False:
-    st.info("Login first, save your name, and toggle in the Let's talk to Agent")
-if credential is True:
-    st.info("Toggle the :violet[Let's talk to Agent] toggle to start the conversation. Enjoy chatting :smile:")
+    st.info("Login first")
+elif credential is True and agent is False:
+    st.info("Save your name and toggle the :violet[Let's talk to Agent] toggle to start the conversation. Enjoy chatting :smile:")
 elif credential is True and agent is True:
     prompt_history = "Hi"
     import time
-    st.write("### :gray[Conversation]")
+    st.write("### :gray[Start the Conversation]")
     
     if agent:
-        prompt_user = st.chat_input("Talk to my agent")
+        prompt_user = st.chat_input("What do you want to talk about?")
         if input_name is not "":
             if prompt_user:
                 time = time.strftime("Date: %Y-%m-%d | Time: %H:%M:%S UTC")
-                message = st.chat_message("user")
-                message.write(f":blue[{input_name}]: {prompt_user}")
-                message.caption(f"{time}")
-                message = st.chat_message("assistant")
-
-                if model == "Text":
-                    response = text_model.predict(prompt_user,
-                        **text_parameters
-                    )
-                    output = response.text
+                cur.execute(f"""
+                            SELECT * 
+                            FROM chats
+                            WHERE name='{input_name}'
+                            ORDER BY time ASC
+                            """)
+                for id, name, prompt, output, model, datetime in cur.fetchall():
+                    message = st.chat_message("user")
+                    message.write(f":blue[{name}]: {prompt}")
+                    message.caption(f"{time}")
+                    message = st.chat_message("assistant")
                     message.write(output)
-                    message.caption(f"{time} | Model: {model}")
-                    st.divider()
-
-                elif model == "Chat":
+                    message.caption(f"{time}")
+                    
+                if model == "Chat":
                     cur.execute(f"""
                             SELECT * 
                             FROM chats
                             WHERE name='{input_name}'
                             ORDER BY time ASC
                             """)
-                    for id, name, prompt, output, model, time in cur.fetchall():
+                    for id, name, prompt, output, model, datetime in cur.fetchall():
                         prompt_history = prompt_history + "\n " + f"{name}: {prompt}" + "\n " + f"Model Output: {output}"
                     response = chat.send_message(prompt_history, **chat_parameters)
                     response = chat.send_message(prompt_user, **chat_parameters)
+                    output = response.text
+                    message.write(output)
+                    message.caption(f"{time} | Model: {model}")
+                    st.divider()
+                    
+                elif model == "Text":
+                    response = text_model.predict(prompt_user,
+                        **text_parameters
+                    )
                     output = response.text
                     message.write(output)
                     message.caption(f"{time} | Model: {model}")
@@ -177,39 +182,10 @@ elif credential is True and agent is True:
                 cur.execute(SQL, data)
                 con.commit()
 
-            with st.expander(f"See Previous Conversation for {input_name}"):
-                cur.execute(f"""
-                            SELECT * 
-                            FROM chats
-                            WHERE name='{input_name}'
-                            ORDER BY time ASC
-                            """)
-                for id, name, prompt, output, model, time in cur.fetchall():
-                    message = st.chat_message("user")
-                    message.write(f":blue[{name}]: {prompt}")
-                    message.caption(f"{time}")
-                    message = st.chat_message("assistant")
-                    message.write(output)
-                    message.caption(f"{time}")
-    else:
-        if not agent:
-            st.info("Start the conversation now by saving your name and toggling the Let's go toggle.")
-        if agent: 
-            st.info("You can now start the conversation by prompting to the text bar. Enjoy. :smile:")
-            with st.expander(f"See Previous Conversation for {input_name}"):
-                cur.execute(f"""
-                            SELECT * 
-                            FROM chats
-                            WHERE name='{input_name}'
-                            ORDER BY time ASC
-                            """)
-                for id, name, prompt, output, model, time in cur.fetchall():
-                    message = st.chat_message("user")
-                message.write(f":blue[{name}]: {prompt}")
-                message.caption(f"{time}")
-                message = st.chat_message("assistant")
-                message.write(output)
-                message.caption(f"{time}")
+        else:
+            if agent: 
+                st.info("You can now start the conversation by prompting to the text bar. Enjoy. :smile:")
+                
 
 # Close Connection
 cur.close()
