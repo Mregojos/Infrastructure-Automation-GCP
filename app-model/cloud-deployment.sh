@@ -65,7 +65,7 @@ HOST:
 DBPORT:
     '5000'
 DBPASSWORD:
-    'password
+    'password'
 PROJECT_NAME:
     '$(gcloud config get project)'
 """ > env.yaml
