@@ -1,6 +1,6 @@
 DBNAME='matt'
 USER='matt' 
-HOST='34.132.157.199' 
+HOST='35.222.21.254' 
 DBPORT='5000'
 DBPASSWORD='password' 
 PROJECT_NAME='matt-0706'
