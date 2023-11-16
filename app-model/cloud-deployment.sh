@@ -57,7 +57,7 @@ cd sh-files
 # Environment Variables for the app
 echo """
 DBNAME:
-    'matt
+    'matt'
 USER:
     'matt'
 HOST:
