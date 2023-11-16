@@ -32,7 +32,7 @@ docker build -t $APP_NAME .
 # Environment Variables for the app
 echo """DBNAME='matt'
 USER='matt' 
-HOST='' 
+HOST='34.132.157.199' 
 DBPORT='5000'
 DBPASSWORD='password' 
 PROJECT_NAME='$(gcloud config get project)'

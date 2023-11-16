@@ -26,3 +26,13 @@ try:
 except:
     st.write("Not connected")
 
+# Query
+# SQL = st.text_area("Query here")
+# if SQL:
+#    st.write(cur.execute(SQL))
+#    st.write(con.commit()) 
+
+# Close Connection
+cur.close()
+con.close()
+st.write("The connection has been disconnected.")
