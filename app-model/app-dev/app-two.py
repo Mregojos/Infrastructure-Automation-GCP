@@ -95,8 +95,7 @@ if agent:
     else:
         st.info("Save your name first.")
 
-
-#----------Notepad Section----------#
+# Column B
 import time
 with columnB:
     st.write("### :gray[Latest conversation]")
