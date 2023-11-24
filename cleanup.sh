@@ -1,7 +1,6 @@
 #---------Application Name Environment Variables----------#
-# TO DO: In prodcution, change these values.
-VERSION="iii"
-APP_NAME="app-prod-$VERSION"
+VERSION="i"
+APP_NAME="infra-auto-$VERSION"
 
 #---------Project Environment Variables---------#
 PROJECT_NAME=$(gcloud config get project)
@@ -35,17 +34,13 @@ DB_USER="$APP_NAME-admin"
 # DB_HOST=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
 DB_HOST=$(gcloud compute instances list --filter="name=$DB_INSTANCE_NAME" --format="value(networkInterfaces[0].accessConfigs[0].natIP)") 
 DB_PORT=5000
-# TO DO
-DB_PASSWORD=$APP_NAME # change the value in production 
+DB_PASSWORD=$APP_NAME 
 PROJECT_NAME='$(gcloud config get project)'
-# TO DO
-ADMIN_PASSWORD=$APP_NAME # change the value in production
+ADMIN_PASSWORD=$APP_NAME 
 APP_PORT=9000
-# APP_ADDRESS= # change the value in production
-# TO DO
-DOMAIN_NAME="" # change the value in production
-# TO DO
-SPECIAL_NAME=$APP_NAME # change the value in production
+APP_ADDRESS=""
+DOMAIN_NAME=""
+SPECIAL_NAME=$APP_NAME 
 
 #----------Deployment Environment Variables----------#
 CLOUD_BUILD_REGION="us-west2"
