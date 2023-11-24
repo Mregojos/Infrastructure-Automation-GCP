@@ -1,10 +1,13 @@
 # Infrastructure Automation on GCP
 
+---
 ## Objective
 * To automate the creation of GCP Services using Shell Scripting CLI and other IaC Tools.
 
+---
 ## Architecture Design
 
+---
 ## GCP Services
 * Custom VPC with three subnets -> App Network
 * Static IP Address -> Database Static Ip Address
@@ -16,6 +19,21 @@
 * Cloud Build -> Build the image
 * Cloud Run -> Run the App
 * Vertex AI Language Model -> Chat Language Model
+
+---
+### Using gcloud and shell scripting
+
+#### Prequisite
+* GCP Account
+* Project Owner Role
+
+```sh
+# Automate the GCP Services Creation
+sh infrastructure-automation-gcp.sh
+
+# Clean Up
+sh cleanup.sh
+```
 
 ---
 Resources:
