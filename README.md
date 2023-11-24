@@ -6,7 +6,7 @@
 
 ---
 ## Architecture Design
-
+![Infrastructire Automation Architecture GCP](images/Infra-Architecture.drawio.png)
 
 ---
 ## GCP Services
