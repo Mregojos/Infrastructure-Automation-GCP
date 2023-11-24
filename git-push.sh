@@ -3,6 +3,18 @@
 # https://github.com/mregojos/infrastructure-automation-gcp
 # https://mregojos@github.com/mregojos/infrastructure-automation-gcp
 
+# For Security
+# Cleanup environment variables
+rm -f ./.env.*
+rm -f ./*/.env.*
+rm -f ./*/*/.env.*
+rm -f ./*/*/*/.env.*
+rm -f ./*/*/*/*/.env.*
+rm -rf .ipynb_checkpoints
+rm -rf ./*/.ipynb_checkpoints
+rm -rf ./*/*/.ipynb_checkpoints
+echo "Successfully removed .env.* and checkpoints files ready to be pushed to repository."
+
 git add .
 # git config --global user.email "EMAIL_ADDRESS"
 # git config --global user.email ""
