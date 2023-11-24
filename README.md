@@ -6,11 +6,11 @@
 
 ---
 ## Architecture Design
-![Infrastructire Automation Architecture GCP](images/Infra-Architecture.drawio.png)
+![Infrastructure Automation Architecture GCP](images/Infra-Architecture.drawio.png)
 
 ---
 ## GCP Services
-![Infrastructire Automation GCP](images/infra.drawio.png)
+![Infrastructure Automation Services GCP](images/infra.drawio.png)
 
 * Custom VPC with three subnets -> App Network
 * Static IP Address -> Database Static Ip Address
