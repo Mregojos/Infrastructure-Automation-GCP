@@ -16,7 +16,7 @@
 * IAM Custom Role -> For Security 
 * Compute Engine -> Database Server
 * Artifact Registry -> Store Container Image
-* Cloud Build -> Build the image
+* Cloud Build -> Build the image and submit to Artifact Registry
 * Cloud Run -> Run the App
 * Vertex AI Language Model -> Chat Language Model
 

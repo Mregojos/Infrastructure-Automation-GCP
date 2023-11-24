@@ -1,8 +1,8 @@
+# Starup Script
 # Environment
-# TO DO: In production, change the values to be more secure. 
-export VERSION="iii" # Change this
-export APP_NAME="app-prod-$VERSION" # change the value in production 
-export DB_PASSWORD=$APP_NAME # change the value in production 
+export VERSION="i" # Change this
+export APP_NAME="infra-auto-$VERSION"  
+export DB_PASSWORD=$APP_NAME 
 
 export DB_CONTAINER_NAME="$APP_NAME-postgres-sql"
 # export DB_NAME="$APP_NAME-admin"
@@ -27,6 +27,6 @@ docker run -d \
     -p 5000:5432 \
     postgres
 docker run -p 8000:80 \
-    -e 'PGADMIN_DEFAULT_EMAIL=matt@example.com' \
-    -e 'PGADMIN_DEFAULT_PASSWORD=sitedbapppassword' \
+    -e 'PGADMIN_DEFAULT_EMAIL=m@example.com' \
+    -e 'PGADMIN_DEFAULT_PASSWORD=password' \
     -d dpage/pgadmin4
