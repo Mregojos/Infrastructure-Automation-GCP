@@ -2,7 +2,7 @@
 
 ---
 ## Objective
-* To automate the creation and provision of GCP Services using Shell Scripting CLI and other IaC Tools
+* To automate the creation and provision of GCP Services using shell scripting, gcloud CLI and other IaC Tools
 
 ---
 ## Architecture Design
