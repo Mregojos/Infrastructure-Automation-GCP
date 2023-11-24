@@ -7,5 +7,6 @@
 ---
 Resources:
 * GitHub Repository: https://github.com/mregojos/infrastructure-automation-gcp
+* App Repository: https://github.com/mregojos/model-deployment
 * Tech Stack GitHub Repository: https://github.com/mregojos/tech-stack
 * Google Cloud Docs: https:cloud.google.com/docs
