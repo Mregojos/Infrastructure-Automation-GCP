@@ -7,8 +7,10 @@
 ---
 ## Architecture Design
 
+
 ---
 ## GCP Services
+![Infrastructire Automation GCP](images/infra.drawio.png)
 * Custom VPC with three subnets -> App Network
 * Static IP Address -> Database Static Ip Address
 * Cloud Storage -> Store Startup Script 
