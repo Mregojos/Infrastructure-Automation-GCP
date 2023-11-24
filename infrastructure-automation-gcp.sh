@@ -168,6 +168,9 @@ gcloud projects add-iam-policy-binding \
     --role=projects/$(gcloud config get project)/roles/$APP_CUSTOM_ROLE
 echo "\n #----------App Service Account has been successfully binded.----------# \n"
 
+# DB_INSTANCE_NAME Address / Host
+DB_HOST=$(gcloud compute instances list --filter="name=$DB_INSTANCE_NAME" --format="value(networkInterfaces[0].accessConfigs[0].natIP)") 
+
 # Environment Variables for the app
 echo """
 DB_NAME:

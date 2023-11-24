@@ -23,7 +23,7 @@
 ---
 ### Using gcloud and shell scripting
 
-#### Prequisite
+#### Prerequisite
 * GCP Account
 * Project Owner Role
 
