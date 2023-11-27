@@ -104,3 +104,4 @@ resource "google_compute_subnetwork" "$NOTEBOOK_REGION" {
 
 EOF
 
+# gcloud compute networks subnets list --network $
