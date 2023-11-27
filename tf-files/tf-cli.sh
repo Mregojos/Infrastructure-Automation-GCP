@@ -1,5 +1,3 @@
-# sh install-iac.sh
-# sh i*
 # terraform.io/docs
 # Oct 2023
 

@@ -3,7 +3,7 @@ VERSION="i"
 APP_NAME="infra-auto-$VERSION"
 
 #---------Project Environment Variables---------#
-PROJECT_NAME=$(gcloud config get project)
+PROJECT_NAME="$(gcloud config get project)"
 
 #----------Database Instance Environment Variables----------#
 VPC_NAME="$APP_NAME-vpc"
