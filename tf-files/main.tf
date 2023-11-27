@@ -112,3 +112,23 @@ resource "google_artifact_registry_repository" "tf-infra-auto-i-artifact-registr
     format = "DOCKER"
 }
 
+resource "google_service_account" "tf-app-service-account" {
+    account_id = "tf-app-service-account"
+    display_name = "tf-app-service-account"
+}
+
+resource "google_project_iam_custom_role" "APP_CUSTOM_ROLE" {
+    role_id = "tfappCustomRole.i"
+    title = "tfappCustomRole.i"
+    description = "Predict Only"
+    permissions = ["aiplatform.endpoints.predict"]
+}
+
+resource "google_project_iam_binding" "APP_BINDING" {
+    project = "mattgcpprojects"
+    role = "projects/mattgcpprojects/roles/tfappCustomRole.i"
+    members = [
+        "serviceAccount:tf-app-service-account@mattgcpprojects.iam.gserviceaccount.com"
+        ]
+}
+

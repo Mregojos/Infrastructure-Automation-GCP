@@ -171,8 +171,76 @@ resource "google_artifact_registry_repository" "$APP_ARTIFACT_NAME" {
     format = "DOCKER"
 }
 
+resource "google_service_account" "$APP_SERVICE_ACCOUNT_NAME" {
+    account_id = "$APP_SERVICE_ACCOUNT_NAME"
+    display_name = "$APP_SERVICE_ACCOUNT_NAME"
+}
+
+resource "google_project_iam_custom_role" "APP_CUSTOM_ROLE" {
+    role_id = "$APP_CUSTOM_ROLE"
+    title = "$APP_CUSTOM_ROLE"
+    description = "Predict Only"
+    permissions = ["aiplatform.endpoints.predict"]
+}
+
+resource "google_project_iam_binding" "APP_BINDING" {
+    project = "$PROJECT_NAME"
+    role = "projects/$(gcloud config get project)/roles/$APP_CUSTOM_ROLE"
+    members = [
+        "serviceAccount:$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com"
+        ]
+}
+
 EOF
 
 # gcloud compute networks subnets list --network=$VPC_NAME
 
 # sh infra.sh && sh tf.sh
+
+sh tf.sh
+
+# build and submnit an image to Artifact Registry
+gcloud builds submit \
+    --region=$CLOUD_BUILD_REGION \
+    --tag $REGION-docker.pkg.dev/$(gcloud config get-value project)/$APP_ARTIFACT_NAME/$APP_NAME:$APP_VERSION
+echo "\n #----------Docker image has been successfully built.----------# \n"
+
+# DB_INSTANCE_NAME Address / Host
+DB_HOST=$(gcloud compute instances list --filter="name=$DB_INSTANCE_NAME" --format="value(networkInterfaces[0].accessConfigs[0].natIP)") 
+
+# Environment Variables for the app
+echo """
+DB_NAME:
+    '$DB_NAME'
+DB_USER:
+    '$DB_USER'
+DB_HOST:
+    '$DB_HOST'
+DB_PORT:
+    '$DB_PORT'
+DB_PASSWORD:
+    '$DB_PASSWORD'
+PROJECT_NAME:
+    '$PROJECT_NAME'
+ADMIN_PASSWORD:
+    '$ADMIN_PASSWORD'
+APP_PORT:
+    '$APP_PORT'
+APP_ADDRESS:
+    '$APP_ADDRESS'
+DOMAIN_NAME:
+    '$DOMAIN_NAME'
+SPECIAL_NAME:
+    '$SPECIAL_NAME'
+""" > .env.yaml
+
+
+# Deploy the app using Cloud Run
+gcloud run deploy $APP_NAME \
+    --max-instances=$MAX_INSTANCES --min-instances=$MIN_INSTANCES --port=$APP_PORT \
+    --env-vars-file=$APP_ENV_FILE \
+    --image=$REGION-docker.pkg.dev/$(gcloud config get project)/$APP_ARTIFACT_NAME/$APP_NAME:$APP_VERSION \
+    --allow-unauthenticated \
+    --region=$REGION \
+    --service-account=$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com 
+echo "\n #----------The application has been successfully deployed.----------# \n"
