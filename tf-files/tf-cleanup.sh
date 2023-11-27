@@ -6,3 +6,4 @@ rm -rf t*.*.backup
 rm -rf main.tf
 rm -rf .t*.hcl
 rm -rf .i*
+rm -rf .t*
