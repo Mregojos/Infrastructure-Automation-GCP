@@ -45,6 +45,7 @@ resource "google_compute_subnetwork" "us-central1" {
 
 resource "google_compute_address" "tf-db-static-ip-address" {
     name = "tf-db-static-ip-address"
+    region = "us-west1"
 }
 
 resource "google_storage_bucket" "tf-infra-auto-i-startup-script" {
@@ -69,5 +70,38 @@ resource "google_project_iam_custom_role" "BUCKET_CUSTOM_ROLE" {
     title = "tfbucketCustomRole.i"
     description = "Get the object only"
     permissions = ["storage.objects.get"]
+}
+
+resource "google_project_iam_binding" "BUCKET_BINDING" {
+    project = "mattgcpprojects"
+    role = "projects/mattgcpprojects/roles/tfbucketCustomRole.i"
+    members = [
+        "serviceAccount:tf-startup-script-bucket-sa@mattgcpprojects.iam.gserviceaccount.com"
+        ]
+}
+
+resource "google_compute_instance" "tf-infra-auto-i-db" {
+    name = "tf-infra-auto-i-db"
+    machine_type = "e2-micro"
+    zone = "us-west1-a"
+    tags = ["db"]
+    boot_disk {
+        initialize_params {
+        image = "debian-cloud/debian-11"
+        }
+    }
+    network_interface {
+        network = "tf-infra-auto-i-vpc"
+        subnetwork = "tf-infra-auto-i-subnet-us-west1"
+        access_config {
+            nat_ip = "35.247.48.187"
+        }
+    }
+    metadata_startup_script = "gs://tf-infra-auto-i-startup-script/startup-script.sh"
+    service_account {
+        email = "tf-startup-script-bucket-sa@mattgcpprojects.iam.gserviceaccount.com"
+        scopes = ["cloud-platform"]
+    }
+    
 }
 

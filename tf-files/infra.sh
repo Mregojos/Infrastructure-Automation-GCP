@@ -104,6 +104,7 @@ resource "google_compute_subnetwork" "$NOTEBOOK_REGION" {
 
 resource "google_compute_address" "$STATIC_IP_ADDRESS_NAME" {
     name = "$STATIC_IP_ADDRESS_NAME"
+    region = "$REGION"
 }
 
 resource "google_storage_bucket" "$BUCKET_NAME" {
@@ -128,6 +129,39 @@ resource "google_project_iam_custom_role" "BUCKET_CUSTOM_ROLE" {
     title = "$STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE"
     description = "Get the object only"
     permissions = ["storage.objects.get"]
+}
+
+resource "google_project_iam_binding" "BUCKET_BINDING" {
+    project = "$PROJECT_NAME"
+    role = "projects/$(gcloud config get project)/roles/$STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE"
+    members = [
+        "serviceAccount:$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com"
+        ]
+}
+
+resource "google_compute_instance" "$DB_INSTANCE_NAME" {
+    name = "$DB_INSTANCE_NAME"
+    machine_type = "$MACHINE_TYPE"
+    zone = "$ZONE"
+    tags = ["$TAGS"]
+    boot_disk {
+        initialize_params {
+        image = "debian-cloud/debian-11"
+        }
+    }
+    network_interface {
+        network = "$VPC_NAME"
+        subnetwork = "$SUBNET_NAME-$REGION"
+        access_config {
+            nat_ip = "$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)"
+        }
+    }
+    metadata_startup_script = "gs://$BUCKET_NAME/startup-script.sh"
+    service_account {
+        email = "$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com"
+        scopes = ["cloud-platform"]
+    }
+    
 }
 
 EOF
