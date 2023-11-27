@@ -58,7 +58,7 @@ echo "\n #----------Exporting Environment Variables is done.----------# \n"
 
 # For Startup Script
 cat > startup-script.txt << EOF
-gcloud storage cp gs://$BUCKET_NAME/startup-script .
+gcloud storage cp gs://$BUCKET_NAME/startup-script.sh .
 sh startup-script.sh
 EOF
 
@@ -120,7 +120,7 @@ resource "google_storage_bucket" "$BUCKET_NAME" {
 }
 
 resource "google_storage_bucket_object" "startup-script-object" {
-    name = "$STARTUP_SCRIPT_NAME"
+    name = "$STARTUP_SCRIPT_NAME.sh"
     source = "app/$STARTUP_SCRIPT_NAME.sh"
     bucket = "$BUCKET_NAME"
 }
@@ -162,7 +162,7 @@ resource "google_compute_instance" "$DB_INSTANCE_NAME" {
             nat_ip = "$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)"
         }
     }
-    metadata_startup_script = "starrtup-script.txt"
+    metadata_startup_script = "startup-script.txt"
     service_account {
         email = "$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com"
         scopes = ["cloud-platform"]

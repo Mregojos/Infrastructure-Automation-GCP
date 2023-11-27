@@ -55,7 +55,7 @@ resource "google_storage_bucket" "tf-infra-auto-i-startup-script" {
 }
 
 resource "google_storage_bucket_object" "startup-script-object" {
-    name = "startup-script.sh"
+    name = "startup-script"
     source = "app/startup-script.sh"
     bucket = "tf-infra-auto-i-startup-script"
 }
@@ -97,7 +97,7 @@ resource "google_compute_instance" "tf-infra-auto-i-db" {
             nat_ip = "35.247.48.187"
         }
     }
-    metadata_startup_script_url = "gs://tf-infra-auto-i-startup-script/startup-script.sh"
+    metadata_startup_script = "starrtup-script.txt"
     service_account {
         email = "tf-startup-script-bucket-sa@mattgcpprojects.iam.gserviceaccount.com"
         scopes = ["cloud-platform"]

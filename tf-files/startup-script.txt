@@ -1,0 +1,2 @@
+gcloud storage cp gs://tf-infra-auto-i-startup-script/startup-script .
+sh startup-script.sh
