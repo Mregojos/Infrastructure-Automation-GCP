@@ -199,6 +199,10 @@ EOF
 
 sh tf.sh
 
+echo "\n GCP Services successful created. \n"
+
+cd app
+
 # build and submnit an image to Artifact Registry
 gcloud builds submit \
     --region=$CLOUD_BUILD_REGION \
