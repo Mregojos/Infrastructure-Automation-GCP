@@ -105,3 +105,10 @@ resource "google_compute_instance" "tf-infra-auto-i-db" {
     
 }
 
+resource "google_artifact_registry_repository" "tf-infra-auto-i-artifact-registry" {
+    location = "us-west1"
+    repository_id = "tf-infra-auto-i-artifact-registry"
+    description = "Docker repository"
+    format = "DOCKER"
+}
+

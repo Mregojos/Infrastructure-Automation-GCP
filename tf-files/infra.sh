@@ -164,6 +164,13 @@ resource "google_compute_instance" "$DB_INSTANCE_NAME" {
     
 }
 
+resource "google_artifact_registry_repository" "$APP_ARTIFACT_NAME" {
+    location = "$REGION"
+    repository_id = "$APP_ARTIFACT_NAME"
+    description = "Docker repository"
+    format = "DOCKER"
+}
+
 EOF
 
 # gcloud compute networks subnets list --network=$VPC_NAME
