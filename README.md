@@ -28,7 +28,7 @@
 
 #### Prerequisite
 * GCP Account
-* Project Owner Role
+* Project Owner IAM Role
 
 ```sh
 # Automate the GCP Services Creation
@@ -37,6 +37,23 @@ sh infrastructure-automation-gcp.sh
 # Clean Up
 sh cleanup.sh
 ```
+
+---
+### Using terraform
+
+#### Prerequisite
+* GCP Account
+* Project Owner IAM Role
+* Terraform CLI
+
+```sh
+# Automate the GCP Services Creation using terraform
+sh tf-files/infra.sh
+
+# Clean Up
+sh tf-files/tf-cleanup.sh
+```
+
 
 ---
 Resources:
