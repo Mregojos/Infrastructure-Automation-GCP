@@ -1,7 +1,7 @@
 # Starup Script
 # Environment
 export VERSION="i" # Change this
-export APP_NAME="infra-auto-$VERSION"  
+export APP_NAME="tf-infra-auto-$VERSION"  
 export DB_PASSWORD=$APP_NAME 
 
 export DB_CONTAINER_NAME="$APP_NAME-postgres-sql"

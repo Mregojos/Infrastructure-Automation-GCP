@@ -56,12 +56,6 @@ MAX_INSTANCES=1
 
 echo "\n #----------Exporting Environment Variables is done.----------# \n"
 
-# For Startup Script
-cat > startup-script.txt << EOF
-gcloud storage cp gs://$BUCKET_NAME/startup-script.sh .
-sh startup-script.sh
-EOF
-
 cat > main.tf << EOF
 # Provider
 terraform {
@@ -162,7 +156,7 @@ resource "google_compute_instance" "$DB_INSTANCE_NAME" {
             nat_ip = "$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)"
         }
     }
-    metadata_startup_script = "startup-script.txt"
+    metadata_startup_script = "gcloud storage cp gs://$BUCKET_NAME/startup-script.sh . \n sh startup-script.sh"
     service_account {
         email = "$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com"
         scopes = ["cloud-platform"]
@@ -208,6 +202,11 @@ sh tf.sh
 echo "\n GCP Services successful created. \n"
 
 cd app
+
+# FIREWALL RULE
+gcloud compute --project=$(gcloud config get project) firewall-rules create $FIREWALL_RULES_NAME \
+    --direction=INGRESS --priority=1000 --network=$VPC_NAME --action=ALLOW --rules=tcp:5000,tcp:8000 --source-ranges=0.0.0.0/0   \
+     --target-tags=$TAGS
 
 # build and submnit an image to Artifact Registry
 gcloud builds submit \
