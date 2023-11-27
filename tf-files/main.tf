@@ -43,3 +43,7 @@ resource "google_compute_subnetwork" "us-central1" {
   network       = google_compute_network.tf-infra-auto-i-vpc.id
 }
 
+resource "google_compute_address" "tf-db-static-ip-address" {
+    name = "tf-db-static-ip-address"
+}
+
