@@ -21,7 +21,7 @@ STATIC_IP_ADDRESS_NAME="tf-db-static-ip-address"
 BUCKET_NAME="$APP_NAME-startup-script"
 STARTUP_SCRIPT_BUCKET_SA="tf-startup-script-bucket-sa"
 STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE="tfbucketCustomRole.$VERSION"
-# STARTUP_SCRIPT_NAME="$APP_NAME-startup-script.sh"
+STARTUP_SCRIPT_NAME="startup-script"
 
 # For Notebook 
 NOTEBOOK_REGION='us-central1'
@@ -106,6 +106,20 @@ resource "google_compute_address" "$STATIC_IP_ADDRESS_NAME" {
     name = "$STATIC_IP_ADDRESS_NAME"
 }
 
+resource "google_storage_bucket" "$BUCKET_NAME" {
+    name = "$BUCKET_NAME"
+    location = "US"
+    force_destroy = true
+}
+
+resource "google_storage_bucket_object" "startup-script-object" {
+    name = "$STARTUP_SCRIPT_NAME"
+    source = "app/$STARTUP_SCRIPT_NAME.sh"
+    bucket = "$BUCKET_NAME"
+}
+
 EOF
 
 # gcloud compute networks subnets list --network=$VPC_NAME
+
+# sh infra.sh && sh tf.sh

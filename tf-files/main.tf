@@ -47,3 +47,15 @@ resource "google_compute_address" "tf-db-static-ip-address" {
     name = "tf-db-static-ip-address"
 }
 
+resource "google_storage_bucket" "tf-infra-auto-i-startup-script" {
+    name = "tf-infra-auto-i-startup-script"
+    location = "US"
+    force_destroy = true
+}
+
+resource "google_storage_bucket_object" "startup-script-object" {
+    name = "startup-script"
+    source = "app/startup-script.sh"
+    bucket = "tf-infra-auto-i-startup-script"
+}
+
