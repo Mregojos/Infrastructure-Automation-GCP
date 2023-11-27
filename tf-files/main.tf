@@ -59,3 +59,15 @@ resource "google_storage_bucket_object" "startup-script-object" {
     bucket = "tf-infra-auto-i-startup-script"
 }
 
+resource "google_service_account" "tf-startup-script-bucket-sa" {
+    account_id = "tf-startup-script-bucket-sa"
+    display_name = "tf-startup-script-bucket-sa"
+}
+
+resource "google_project_iam_custom_role" "BUCKET_CUSTOM_ROLE" {
+    role_id = "tfbucketCustomRole.i"
+    title = "tfbucketCustomRole.i"
+    description = "Get the object only"
+    permissions = ["storage.objects.get"]
+}
+

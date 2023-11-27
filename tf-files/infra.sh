@@ -118,6 +118,18 @@ resource "google_storage_bucket_object" "startup-script-object" {
     bucket = "$BUCKET_NAME"
 }
 
+resource "google_service_account" "$STARTUP_SCRIPT_BUCKET_SA" {
+    account_id = "$STARTUP_SCRIPT_BUCKET_SA"
+    display_name = "$STARTUP_SCRIPT_BUCKET_SA"
+}
+
+resource "google_project_iam_custom_role" "BUCKET_CUSTOM_ROLE" {
+    role_id = "$STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE"
+    title = "$STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE"
+    description = "Get the object only"
+    permissions = ["storage.objects.get"]
+}
+
 EOF
 
 # gcloud compute networks subnets list --network=$VPC_NAME
