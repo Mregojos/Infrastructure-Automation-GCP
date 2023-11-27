@@ -1,2 +1,3 @@
 # In model-deployment App Repository run this to update the app
-cp -rf app-deployment/Main.py app-deployment/pages/Agent.py app-deployment/requirements.txt app-deployment/Dockerfile  ~/infrastructure-automation-gcp/app
+cp -rf app-deployment/Main.py ~/infrastructure-automation-gcp/app
+cp -rf app-deployment/pages/Agent.py ~/infrastructure-automation-gcp/pages
