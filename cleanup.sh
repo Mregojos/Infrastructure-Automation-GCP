@@ -35,7 +35,7 @@ DB_USER="$APP_NAME-admin"
 DB_HOST=$(gcloud compute instances list --filter="name=$DB_INSTANCE_NAME" --format="value(networkInterfaces[0].accessConfigs[0].natIP)") 
 DB_PORT=5000
 DB_PASSWORD=$APP_NAME 
-PROJECT_NAME='$(gcloud config get project)'
+PROJECT_NAME="$(gcloud config get project)"
 ADMIN_PASSWORD=$APP_NAME 
 APP_PORT=9000
 APP_ADDRESS=""
