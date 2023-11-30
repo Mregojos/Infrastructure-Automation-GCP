@@ -17,3 +17,6 @@ env.sh
 ./*/.*.hcl
 ./*.tfstate*
 ./*/*.tfstate*
+./main.tf
+./*/main.tf
+./*/*/main.tf
