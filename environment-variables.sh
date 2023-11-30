@@ -1,59 +1,59 @@
 #---------Application Name Environment Variables----------#
-source VERSION="i"
-source APP_NAME="infra-auto-$VERSION"
-source DB_PASSWORD="password" 
-source ADMIN_PASSWORD="password"
-source SPECIAL_NAME="guest"
+export VERSION="i"
+export APP_NAME="infra-auto-$VERSION"
+export DB_PASSWORD="password" 
+export ADMIN_PASSWORD="password"
+export SPECIAL_NAME="guest"
 
 #---------Project Environment Variables---------#
-source PROJECT_NAME="$(gcloud config get project)"
+export PROJECT_NAME="$(gcloud config get project)"
 
 #----------Database Instance Environment Variables----------#
-source VPC_NAME="$APP_NAME-vpc"
-source SUBNET_NAME="$APP_NAME-subnet"
-source RANGE_A='10.100.0.0/20'
-source RANGE_B='10.200.0.0/20'
-source DB_INSTANCE_NAME="$APP_NAME-db"
-source MACHINE_TYPE="e2-micro"
-source REGION="us-west1"
-source ZONE="us-west1-a"
-source BOOT_DISK_SIZE="30"
-source TAGS="db"
-source FIREWALL_RULES_NAME="$APP_NAME-ports"
-source STATIC_IP_ADDRESS_NAME="db-static-ip-address"
-source BUCKET_NAME="$APP_NAME-startup-script"
-source STARTUP_SCRIPT_BUCKET_SA="startup-script-bucket-sa"
-source STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE="bucketCustomRole.$VERSION"
-# source STARTUP_SCRIPT_NAME="$APP_NAME-startup-script.sh"
+export VPC_NAME="$APP_NAME-vpc"
+export SUBNET_NAME="$APP_NAME-subnet"
+export RANGE_A='10.100.0.0/20'
+export RANGE_B='10.200.0.0/20'
+export DB_INSTANCE_NAME="$APP_NAME-db"
+export MACHINE_TYPE="e2-micro"
+export REGION="us-west1"
+export ZONE="us-west1-a"
+export BOOT_DISK_SIZE="30"
+export TAGS="db"
+export FIREWALL_RULES_NAME="$APP_NAME-ports"
+export STATIC_IP_ADDRESS_NAME="db-static-ip-address"
+export BUCKET_NAME="$APP_NAME-startup-script"
+export STARTUP_SCRIPT_BUCKET_SA="startup-script-bucket-sa"
+export STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE="bucketCustomRole.$VERSION"
+# export STARTUP_SCRIPT_NAME="$APP_NAME-startup-script.sh"
 
 # For Notebook 
-source NOTEBOOK_REGION='us-central1'
-source RANGE_C='10.150.0.0/20'
+export NOTEBOOK_REGION='us-central1'
+export RANGE_C='10.150.0.0/20'
 
 #---------Database Credentials----------#
-source DB_CONTAINER_NAME="$APP_NAME-postgres-sql"
-source DB_NAME="$APP_NAME-admin"
-source DB_USER="$APP_NAME-admin" 
-# source DB_HOST=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
-source DB_HOST=$(gcloud compute instances list --filter="name=$DB_INSTANCE_NAME" --format="value(networkInterfaces[0].accessConfigs[0].natIP)") 
-source DB_PORT=5000
-source DB_PASSWORD=$DB_PASSWORD
-source ADMIN_PASSWORD=$ADMIN_PASSWORD 
-source APP_PORT=9000
-source APP_ADDRESS=""
-source DOMAIN_NAME=""
-source SPECIAL_NAME=$SPECIAL_NAME
+export DB_CONTAINER_NAME="$APP_NAME-postgres-sql"
+export DB_NAME="$APP_NAME-admin"
+export DB_USER="$APP_NAME-admin" 
+# export DB_HOST=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
+export DB_HOST=$(gcloud compute instances list --filter="name=$DB_INSTANCE_NAME" --format="value(networkInterfaces[0].accessConfigs[0].natIP)") 
+export DB_PORT=5000
+export DB_PASSWORD=$DB_PASSWORD
+export ADMIN_PASSWORD=$ADMIN_PASSWORD 
+export APP_PORT=9000
+export APP_ADDRESS=""
+export DOMAIN_NAME=""
+export SPECIAL_NAME=$SPECIAL_NAME
 
 #----------Deployment Environment Variables----------#
-source CLOUD_BUILD_REGION="us-west2"
-source REGION="us-west1"
-source APP_ARTIFACT_NAME="$APP_NAME-artifact-registry"
-source APP_VERSION="latest"
-source APP_SERVICE_ACCOUNT_NAME="app-service-account"
-source APP_CUSTOM_ROLE="appCustomRole.$VERSION"
-source APP_PORT=9000
-source APP_ENV_FILE=".env.yaml"
-source MIN_INSTANCES=1
-source MAX_INSTANCES=1
+export CLOUD_BUILD_REGION="us-west2"
+export REGION="us-west1"
+export APP_ARTIFACT_NAME="$APP_NAME-artifact-registry"
+export APP_VERSION="latest"
+export APP_SERVICE_ACCOUNT_NAME="app-service-account"
+export APP_CUSTOM_ROLE="appCustomRole.$VERSION"
+export APP_PORT=9000
+export APP_ENV_FILE=".env.yaml"
+export MIN_INSTANCES=1
+export MAX_INSTANCES=1
 
 echo "\n #----------Exporting Environment Variables is done.----------# \n"
