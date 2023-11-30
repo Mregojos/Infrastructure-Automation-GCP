@@ -1,4 +1,6 @@
 terraform init
 terraform plan
 terraform apply -auto-approve
-# terraform destroy
+# terraform destroy -auto-approve
+
+# terraform show

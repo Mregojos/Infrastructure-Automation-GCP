@@ -44,4 +44,11 @@ resource "google_compute_subnetwork" "$NOTEBOOK_REGION" {
   network       = google_compute_network.$VPC_NAME.id
 }
 
+resource "google_compute_address" "$STATIC_IP_ADDRESS_NAME" {
+    name = "$STATIC_IP_ADDRESS_NAME"
+    region = "$REGION"
+}
+
 EOF
+
+sh tf.sh
