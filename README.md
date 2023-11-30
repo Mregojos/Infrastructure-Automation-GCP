@@ -32,9 +32,11 @@
 
 ```sh
 # Automate the GCP Services Creation
+source environment-variables.sh
 sh infrastructure-automation-gcp.sh
 
 # Clean Up
+source environment-variables.sh
 sh cleanup.sh
 ```
 
@@ -48,9 +50,11 @@ sh cleanup.sh
 
 ```sh
 # Automate the GCP Services Creation using terraform
+source tf-environment-variables.sh
 sh tf-files/infra.sh
 
 # Clean Up
+source tf-environment-variables.sh
 sh tf-files/tf-cleanup.sh
 ```
 
@@ -58,7 +62,7 @@ sh tf-files/tf-cleanup.sh
 ---
 Resources:
 * GitHub Repository: https://github.com/mregojos/infrastructure-automation-gcp
-* App Repository: https://github.com/mregojos/model-deployment
-* CI/CD on GCP: https://github.com/mregojos/CI-CD-GCP
+* App GitHub Repository: https://github.com/mregojos/model-deployment
+* CI/CD on GCP GitHub Repository: https://github.com/mregojos/CI-CD-GCP
 * Tech Stack GitHub Repository: https://github.com/mregojos/tech-stack
 * Google Cloud Docs: https://cloud.google.com/docs
