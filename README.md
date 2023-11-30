@@ -52,7 +52,7 @@ sh cleanup.sh
 # Using Terraform (Local State)
 # Automate the GCP Services Creation using Terraform
 source tf-files/tf-environment-variables.sh
-sh tf-files/infra.sh
+sh tf-files/tf-infra.sh
 
 # Clean Up
 source tf-files/tf-environment-variables.sh
@@ -62,7 +62,7 @@ sh tf-files/tf-cleanup.sh
 # Using Terraform (Cloud Storage State)
 # Automate the GCP Services Creation using Terraform
 source tf-files-with-state/tf-environment-variables.sh
-sh tf-files-with-state/infra.sh
+sh tf-files-with-state/tf-infra.sh
 
 # Clean Up
 source tf-files-with-state/tf-environment-variables.sh

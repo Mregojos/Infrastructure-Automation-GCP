@@ -21,14 +21,10 @@ vertexai.init(project=PROJECT_NAME, location="us-central1")
 
 #----------Page Configuration----------# 
 st.set_page_config(page_title="Matt Cloud Tech",
-                   page_icon=":cloud:",
-                   # layout="wide",
-                   # menu_items={
-                   #    'About':"# Matt Cloud Tech"}
-                  )
+                   page_icon=":cloud:")
 
 # Title
-st.write("#### Pre-Trained Model Deployment")
+st.write("#### Pre-Trained Language Model Deployment")
 
 #----------Connect to a database----------# 
 def connection():
@@ -48,10 +44,6 @@ def connection():
     cur.execute("CREATE TABLE IF NOT EXISTS total_prompts(id serial PRIMARY KEY, name varchar, prompt varchar, output varchar, model varchar, time varchar, count_prompt int)")
     con.commit()
     return con, cur
-
-#----------Variables----------#
-credential = False 
-agent = False
 
 #----------Models----------#
 def models():
@@ -104,7 +96,7 @@ def sections(con, cur):
         elif login:
             if username == "admin" and password == ADMIN_PASSWORD:
                 credential = True
-                st.write(f":violet[Your chat will be stored in a database, use the same name to see your past conversations.]")
+                st.write(f":violet[Your chat will be stored in a database. Use the same name to see your past conversations.]")
                 st.caption(":warning: :red[Do not add sensitive data.]")
                 model = st.selectbox("Choose Chat or Code Generation?", ('Chat', 'Code'))
                 input_name = st.text_input("Your Name")
@@ -114,7 +106,7 @@ def sections(con, cur):
                     st.info(f"Your name for this conversation is :blue[{input_name}]")
                 elif save and input_name == "":
                     st.info("Save your name first.")
-                agent = st.toggle("**:violet[Let's talk to Agent]**")
+                agent = st.toggle("**:violet[Start the conversation]**")
                 if agent:
                     if input_name is not "":
                         # reset = st.button(":white[Refresh Conversation]")
@@ -135,8 +127,8 @@ def sections(con, cur):
     #----------For Guest Login----------#            
         elif guest:
             credential = True
-            st.write("You will be my agent's :blue[guest].")
-            st.write(f":violet[Your chat will be stored in a database, use the same name to see your past conversations.]")
+            st.write("You will be Agent's :blue[guest].")
+            st.write(f":violet[Your chat will be stored in a database. Use the same name to see your past conversations.]")
             st.caption(":warning: :red[Do not add sensitive data.]")
             model = st.selectbox("Choose Chat or Code Generation?", ('Chat', 'Code'))
             input_name = st.text_input("Your Name")
@@ -146,7 +138,7 @@ def sections(con, cur):
                 st.info(f"Your name for this conversation is :blue[{input_name}]")
             elif save and input_name == "":
                 st.info("Save your name first.")
-            agent = st.toggle("**:violet[Let's talk to Agent]**")
+            agent = st.toggle("**:violet[Start the conversation]**")
             time = t.strftime("Date: %Y-%m-%d | Time: %H:%M:%S UTC")
             time_date = time[0:15]
             if agent:
@@ -187,13 +179,13 @@ def sections(con, cur):
     #----------For Admin----------#    
     if login and not guest:
         if credential is False:
-            st.info("Save your name and toggle the :violet[Let's talk to Agent] to start the conversation.")
+            st.info("Save your name and toggle the :violet[Start the conversation].")
         elif credential is True and agent is False:
-            st.info("Save your name and toggle the :violet[Let's talk to Agent] to start the conversation. Enjoy chatting :smile:")
+            st.info("Save your name and toggle the :violet[Start the conversation]. Enjoy chatting :smile:")
         elif credential is True and agent is True and input_name == "":
             st.info("Don't forget to save your name to continue.")
         elif credential is True and agent is True:
-            prompt_history = "Hi. You are an intelligent Agent."
+            prompt_history = "You are an intelligent Agent."
             st.write("#### :gray[Start the Conversation]")
             if agent:
                 prompt_user = st.chat_input("What do you want to talk about?")
@@ -213,10 +205,12 @@ def sections(con, cur):
                                 prompt_history = prompt_history + "\n " + f"{name}: {prompt}" + "\n " + f"Model Output: {output}"
                             response = chat.send_message(prompt_history, **chat_parameters)
                             response = chat.send_message(prompt_user, **chat_parameters)
-                            if response == "":
+                            if response != " ":
+                                output = response.text
+                            elif response == "" or response == None:
                                 output = "Oh snap. Could your repeat the prompt?"
                             else:
-                                output = response.text
+                                output = "Oh snap. Could your repeat the prompt?"
                             
                         except:
                             output = "Sorry for that. Could your repeat the prompt?"
@@ -234,11 +228,12 @@ def sections(con, cur):
                                 prompt_history = prompt_history + "\n " + f"{name}: {prompt}" + "\n " + f"Model Output: {output}"
                             response = code_chat.send_message(prompt_history, **code_parameters)
                             response = code_chat.send_message(prompt_user, **code_parameters)
-                            output = response.text
-                            if response == "":
+                            if response != " ":
+                                output = response.text
+                            elif response == "" or response == None:
                                 output = "Oh snap. Could your repeat the prompt?"
                             else:
-                                output = response.text
+                                output = "Oh snap. Could your repeat the prompt?"
                         except:
                             output = "I didn't catch that. Could your repeat the prompt?"
 
@@ -265,7 +260,7 @@ def sections(con, cur):
                         message.text(f"{prompt}")
                         message.caption(f"{time}")
                         message = st.chat_message("assistant")
-                        message.write(output)
+                        message.markdown(output)
                         message.caption(f"{time} | Model: {model}")            
 
                 else:
@@ -282,19 +277,19 @@ def sections(con, cur):
                         message.text(f"{prompt}")
                         message.caption(f"{time}")
                         message = st.chat_message("assistant")
-                        message.write(output)
+                        message.markdown(output)
                         message.caption(f"{time} | Model: {model}") 
                         
     #----------For Guest----------#    
     elif guest and not login:
         if credential is False:
-            st.info("Save your name and toggle the :violet[Let's talk to Agent] to start the conversation.")
+            st.info("Save your name and toggle the :violet[Start the conversation].")
         elif credential is True and agent is False:
-            st.info("Save your name and toggle the :violet[Let's talk to Agent] to start the conversation. Enjoy chatting :smile:")
+            st.info("Save your name and toggle the :violet[Start the conversation]. Enjoy chatting :smile:")
         elif credential is True and agent is True and input_name == "":
             st.info("Don't forget to save your name to continue.")
         elif credential is True and agent is True and total_count < LIMIT:
-            prompt_history = "Hi"
+            prompt_history = "You are an intelligent Agent."
             import time
             st.write("#### :gray[Start the Conversation]")
             if agent:
@@ -315,11 +310,12 @@ def sections(con, cur):
                                 prompt_history = prompt_history + "\n " + f"{name}: {prompt}" + "\n " + f"Model Output: {output}"
                             response = chat.send_message(prompt_history, **chat_parameters)
                             response = chat.send_message(prompt_user, **chat_parameters)
-                            output = response.text
-                            if response == "":
+                            if response != " ":
+                                output = response.text
+                            elif response == "" or response == None:
                                 output = "Oh snap. Could your repeat the prompt?"
                             else:
-                                output = response.text
+                                output = "Oh snap. Could your repeat the prompt?"
                         except:
                             output = "Sorry for that. Could your repeat the prompt?"
 
@@ -337,11 +333,12 @@ def sections(con, cur):
                                 prompt_history = prompt_history + "\n " + f"{name}: {prompt}" + "\n " + f"Model Output: {output}"
                             response = code_chat.send_message(prompt_history, **code_parameters)
                             response = code_chat.send_message(prompt_user, **code_parameters)
-                            output = response.text
-                            if response == "":
+                            if response != " ":
+                                output = response.text
+                            elif response == "" or response == None:
                                 output = "Oh snap. Could your repeat the prompt?"
                             else:
-                                output = response.text
+                                output = "Oh snap. Could your repeat the prompt?"
                         except:
                             output = "I didn't catch that. Could your repeat the prompt?"
 
@@ -368,7 +365,7 @@ def sections(con, cur):
                         message.text(f"{prompt}")
                         message.caption(f"{time}")
                         message = st.chat_message("assistant")
-                        message.write(output)
+                        message.markdown(output)
                         message.caption(f"{time} | Model: {model}")            
 
                 else:
@@ -385,7 +382,7 @@ def sections(con, cur):
                         message.text(f"{prompt}")
                         message.caption(f"{time}")
                         message = st.chat_message("assistant")
-                        message.write(output)
+                        message.markdown(output)
                         message.caption(f"{time} | Model: {model}") 
         elif total_count >= LIMIT:
             st.info("You've reached your limit.")
