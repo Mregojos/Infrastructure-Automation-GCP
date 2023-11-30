@@ -1,6 +1,9 @@
 #---------Application Name Environment Variables----------#
 source VERSION="i"
 source APP_NAME="infra-auto-$VERSION"
+source DB_PASSWORD="password" 
+source ADMIN_PASSWORD="password"
+source SPECIAL_NAME="guest"
 
 #---------Project Environment Variables---------#
 source PROJECT_NAME="$(gcloud config get project)"
@@ -34,13 +37,12 @@ source DB_USER="$APP_NAME-admin"
 # source DB_HOST=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
 source DB_HOST=$(gcloud compute instances list --filter="name=$DB_INSTANCE_NAME" --format="value(networkInterfaces[0].accessConfigs[0].natIP)") 
 source DB_PORT=5000
-source DB_PASSWORD=$APP_NAME 
-source PROJECT_NAME="$(gcloud config get project)"
-source ADMIN_PASSWORD=$APP_NAME 
+source DB_PASSWORD=$DB_PASSWORD
+source ADMIN_PASSWORD=$ADMIN_PASSWORD 
 source APP_PORT=9000
 source APP_ADDRESS=""
 source DOMAIN_NAME=""
-source SPECIAL_NAME=$APP_NAME 
+source SPECIAL_NAME=$SPECIAL_NAME
 
 #----------Deployment Environment Variables----------#
 source CLOUD_BUILD_REGION="us-west2"
