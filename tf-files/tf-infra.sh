@@ -4,7 +4,7 @@ gcloud services enable compute.googleapis.com iam.googleapis.com cloudbuild.goog
 echo "\n #----------Services have been successfully enabled.----------# \n"
 
 # Without using variables
-sh tf-main.sh
+# sh tf-main.sh
 
 # With variables
 sh tf-vars-main.sh
