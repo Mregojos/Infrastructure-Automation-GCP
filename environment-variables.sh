@@ -23,7 +23,7 @@ export FIREWALL_RULES_NAME="$APP_NAME-ports"
 export STATIC_IP_ADDRESS_NAME="db-static-ip-address"
 export BUCKET_NAME="$APP_NAME-startup-script"
 export STARTUP_SCRIPT_BUCKET_SA="startup-script-bucket-sa"
-export STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE="bucketCustomRole.$VERSION"
+export STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE="infraBucketCustomRole.$VERSION"
 # export STARTUP_SCRIPT_NAME="$APP_NAME-startup-script.sh"
 
 # For Notebook 
@@ -31,7 +31,7 @@ export NOTEBOOK_REGION='us-central1'
 export RANGE_C='10.150.0.0/20'
 
 #---------Database Credentials----------#
-export DB_CONTAINER_NAME="$APP_NAME-postgres-sql"
+export DB_CONTAINER_NAME="$APP_NAME-sql"
 export DB_NAME="$APP_NAME-admin"
 export DB_USER="$APP_NAME-admin" 
 # export DB_HOST=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
@@ -50,7 +50,7 @@ export REGION="us-west1"
 export APP_ARTIFACT_NAME="$APP_NAME-artifact-registry"
 export APP_VERSION="latest"
 export APP_SERVICE_ACCOUNT_NAME="app-service-account"
-export APP_CUSTOM_ROLE="appCustomRole.$VERSION"
+export APP_CUSTOM_ROLE="infraAppCustomRole.$VERSION"
 export APP_PORT=9000
 export APP_ENV_FILE=".env.yaml"
 export MIN_INSTANCES=1
