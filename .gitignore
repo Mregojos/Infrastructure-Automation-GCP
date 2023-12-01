@@ -20,3 +20,5 @@ env.sh
 ./main.tf
 ./*/main.tf
 ./*/*/main.tf
+./*.tf*
+./*/*/*.tf*
