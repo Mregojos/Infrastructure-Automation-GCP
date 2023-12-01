@@ -37,13 +37,12 @@ export DB_USER="$APP_NAME-admin"
 # export DB_HOST=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
 export DB_HOST=$(gcloud compute instances list --filter="name=$DB_INSTANCE_NAME" --format="value(networkInterfaces[0].accessConfigs[0].natIP)") 
 export DB_PORT=5000
-export DB_PASSWORD=$APP_NAME 
-export PROJECT_NAME="$(gcloud config get project)"
-export ADMIN_PASSWORD=$APP_NAME 
+export DB_PASSWORD=$DB_PASSWORD
+export ADMIN_PASSWORD=$ADMIN_PASSWORD 
 export APP_PORT=9000
 export APP_ADDRESS=""
 export DOMAIN_NAME=""
-export SPECIAL_NAME=$APP_NAME 
+export SPECIAL_NAME=$SPECIAL_NAME
 
 #----------Deployment Environment Variables----------#
 export CLOUD_BUILD_REGION="us-west2"

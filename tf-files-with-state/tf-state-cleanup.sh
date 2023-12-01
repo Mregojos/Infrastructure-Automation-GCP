@@ -8,3 +8,4 @@ rm -rf .i*
 rm -rf .t*
 rm -rf *.t*
 gcloud storage rm -r gs://$APP_NAME-tf-bucket-backend
+gcloud storage rm -r gs://$(gcloud config get project)_cloudbuild
