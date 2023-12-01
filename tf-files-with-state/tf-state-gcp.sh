@@ -9,6 +9,15 @@ echo "\n #----------Services have been successfully enabled.----------# \n"
 # With variables
 sh tf-state-vars-main.sh
 
+cat > backend.tf << EOF
+terraform {
+    backend "gcs" {
+        bucket = "$APP_NAME-tf-bucket-backend"
+        prefix = "terraform/state"
+    }
+}
+EOF
+
 cd app
 
 # build and submnit an image to Artifact Registry
@@ -56,3 +65,5 @@ gcloud run deploy $APP_NAME \
     --region=$REGION \
     --service-account=$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com 
 echo "\n #----------The application has been successfully deployed.----------# \n"
+
+

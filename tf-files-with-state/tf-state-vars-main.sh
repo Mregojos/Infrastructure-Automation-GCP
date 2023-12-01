@@ -27,7 +27,7 @@ variable "tf_metadata_startup_script" {}
 variable "tf_email" {}
 variable "tf_app_role" {}
 variable "tf_app_member" {}
-variable "tf_bucket_backend"
+variable "tf_bucket_backend" {}
 EOF
 
 cat > main.tf << EOF
@@ -188,15 +188,6 @@ resource "google_storage_bucket" "tf_bucket_backend" {
     }
 }
 
-EOF
-
-cat > backend.tf << EOF
-terraform {
-    bakend "gcs" {
-        bucket = var.tf_bucket_backend
-        prefix = "terraform/state"
-    }
-}
 EOF
 
 sh tf.sh
