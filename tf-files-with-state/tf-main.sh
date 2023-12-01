@@ -1,33 +1,3 @@
-cat > terraform.tfvars << EOF
-tf_project = "$PROJECT_NAME"
-tf_vpc_name = "$VPC_NAME"
-tf_bucket_name = "$BUCKET_NAME"
-tf_role = "projects/$(gcloud config get project)/roles/$STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE"
-tf_member = "serviceAccount:$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com"
-tf_metadata_startup_script = "gcloud storage cp gs://$BUCKET_NAME/startup-script.sh . \n sh startup-script.sh"
-tf_email = "$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com"
-tf_app_role = "projects/$(gcloud config get project)/roles/$APP_CUSTOM_ROLE"
-tf_app_member = "serviceAccount:$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com"
-EOF
-
-cat > variables.tf << EOF
-variable "tf_project" {}
-variable "tf_region" {
-    default = "northamerica-northeast1"
-}
-variable "tf_zone" {
-    default = "northamerica-northeast1-a"
-}
-variable "tf_vpc_name" {}
-variable "tf_bucket_name" {}
-variable "tf_role" {}
-variable "tf_member" {}
-variable "tf_metadata_startup_script" {}
-variable "tf_email" {}
-variable "tf_app_role" {}
-variable "tf_app_member" {}
-EOF
-
 cat > main.tf << EOF
 # Provider
 terraform {
@@ -40,14 +10,14 @@ terraform {
 }
 
 provider "google" {
-  project = var.tf_project
-  region  = var.tf_region
-  zone    = var.tf_zone
+  project = "$PROJECT_NAME"
+  region  = "northamerica-northeast1"
+  zone    = "northamerica-northeast1-a"
 }
 
 # Create VPC Network resource
-resource "google_compute_network" "tf_vpc" {
-  name = var.tf_vpc_name
+resource "google_compute_network" "$VPC_NAME" {
+  name = "$VPC_NAME"
   auto_create_subnetworks = false
   mtu = 1460
 }
@@ -57,21 +27,21 @@ resource "google_compute_subnetwork" "$REGION" {
   name          = "$SUBNET_NAME-$REGION"
   ip_cidr_range = "$RANGE_A"
   region        = "$REGION"
-  network       = google_compute_network.tf_vpc.id
+  network       = google_compute_network.$VPC_NAME.id
 }
 
 resource "google_compute_subnetwork" "$CLOUD_BUILD_REGION" {
   name          = "$SUBNET_NAME-$CLOUD_BUILD_REGION"
   ip_cidr_range = "$RANGE_B"
   region        = "$CLOUD_BUILD_REGION"
-  network       = google_compute_network.tf_vpc.id
+  network       = google_compute_network.$VPC_NAME.id
 }
 
 resource "google_compute_subnetwork" "$NOTEBOOK_REGION" {
   name          = "$SUBNET_NAME-$NOTEBOOK_REGION"
   ip_cidr_range = "$RANGE_C"
   region        = "$NOTEBOOK_REGION"
-  network       = google_compute_network.tf_vpc.id
+  network       = google_compute_network.$VPC_NAME.id
 }
 
 resource "google_compute_address" "$STATIC_IP_ADDRESS_NAME" {
@@ -79,8 +49,8 @@ resource "google_compute_address" "$STATIC_IP_ADDRESS_NAME" {
     region = "$REGION"
 }
 
-resource "google_storage_bucket" "tf_bucket" {
-    name = var.tf_bucket_name
+resource "google_storage_bucket" "$BUCKET_NAME" {
+    name = "$BUCKET_NAME"
     location = "US"
     force_destroy = true
 }
@@ -88,7 +58,7 @@ resource "google_storage_bucket" "tf_bucket" {
 resource "google_storage_bucket_object" "startup-script-object" {
     name = "$STARTUP_SCRIPT_NAME.sh"
     source = "app/$STARTUP_SCRIPT_NAME.sh"
-    bucket = google_storage_bucket.tf_bucket.id
+    bucket = google_storage_bucket.$BUCKET_NAME.id
 }
 
 resource "google_service_account" "$STARTUP_SCRIPT_BUCKET_SA" {
@@ -104,10 +74,10 @@ resource "google_project_iam_custom_role" "BUCKET_CUSTOM_ROLE" {
 }
 
 resource "google_project_iam_binding" "BUCKET_BINDING" {
-    project = var.tf_project
-    role = var.tf_role
+    project = "$PROJECT_NAME"
+    role = "projects/$(gcloud config get project)/roles/$STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE"
     members = [
-        var.tf_member
+        "serviceAccount:$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com"
         ]
 }
 
@@ -122,15 +92,15 @@ resource "google_compute_instance" "$DB_INSTANCE_NAME" {
         }
     }
     network_interface {
-        network = var.tf_vpc_name
+        network = "$VPC_NAME"
         subnetwork = google_compute_subnetwork.$REGION.name
         access_config {
             nat_ip = google_compute_address.$STATIC_IP_ADDRESS_NAME.address
         }
     }
-    metadata_startup_script = var.tf_metadata_startup_script
+    metadata_startup_script = "gcloud storage cp gs://$BUCKET_NAME/startup-script.sh . \n sh startup-script.sh"
     service_account {
-        email = var.tf_email
+        email = "$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com"
         scopes = ["cloud-platform"]
     }
     
@@ -156,10 +126,10 @@ resource "google_project_iam_custom_role" "APP_CUSTOM_ROLE" {
 }
 
 resource "google_project_iam_binding" "APP_BINDING" {
-    project = var.tf_project
-    role = var.tf_app_role
+    project = "$PROJECT_NAME"
+    role = "projects/$(gcloud config get project)/roles/$APP_CUSTOM_ROLE"
     members = [
-        var.tf_app_member
+        "serviceAccount:$APP_SERVICE_ACCOUNT_NAME@$(gcloud config get project).iam.gserviceaccount.com"
         ]
 }
 
@@ -170,7 +140,7 @@ resource "google_compute_firewall" "$FIREWALL_RULES_NAME" {
       protocol = "tcp"
     }
     direction = "INGRESS"
-    network = google_compute_network.tf_vpc.name
+    network = google_compute_network.$VPC_NAME.name
     priority = 1000
     source_ranges = ["0.0.0.0/0"]
     target_tags = ["$TAGS"]
