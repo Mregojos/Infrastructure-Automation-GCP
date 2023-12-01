@@ -31,7 +31,7 @@ export NOTEBOOK_REGION='us-central1'
 export RANGE_C='10.150.0.0/20'
 
 #---------Database Credentials----------#
-export DB_CONTAINER_NAME="$APP_NAME-postgres-sql"
+export DB_CONTAINER_NAME="$APP_NAME-sql"
 export DB_NAME="$APP_NAME-admin"
 export DB_USER="$APP_NAME-admin" 
 # export DB_HOST=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)

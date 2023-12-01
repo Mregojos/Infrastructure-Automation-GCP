@@ -2,7 +2,7 @@
 # Environment
 export VERSION="i"
 export APP_NAME="tf-state-infra-i"
-export DB_PASSWORD="tf-state-infra-i"
+export DB_PASSWORD="password"
 
 export DB_CONTAINER_NAME="$APP_NAME-sql"
 # export DB_NAME="$APP_NAME-admin"

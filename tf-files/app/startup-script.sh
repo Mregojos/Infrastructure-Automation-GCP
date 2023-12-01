@@ -1,7 +1,7 @@
 # Starup Script
 # Environment
 export VERSION="i"
-export APP_NAME="infra-auto-i"
+export APP_NAME="tf-infra-auto-i"
 export DB_PASSWORD="password"
 
 export DB_CONTAINER_NAME="$APP_NAME-sql"

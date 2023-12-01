@@ -98,7 +98,7 @@ resource "google_compute_instance" "$DB_INSTANCE_NAME" {
             nat_ip = google_compute_address.$STATIC_IP_ADDRESS_NAME.address
         }
     }
-    metadata_startup_script = "gcloud storage cp gs://$BUCKET_NAME/startup-script.sh . \n sh startup-script.sh"
+    metadata_startup_script = "gcloud storage cp gs://$BUCKET_NAME/startup-script.sh . \nsh startup-script.sh"
     service_account {
         email = "$STARTUP_SCRIPT_BUCKET_SA@$(gcloud config get project).iam.gserviceaccount.com"
         scopes = ["cloud-platform"]
