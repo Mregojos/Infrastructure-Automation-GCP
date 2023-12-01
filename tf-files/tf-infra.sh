@@ -3,7 +3,7 @@
 gcloud services enable compute.googleapis.com iam.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com run.googleapis.com aiplatform.googleapis.com cloudresourcemanager.googleapis.com
 echo "\n #----------Services have been successfully enabled.----------# \n"
 
-sh main.sh
+sh tf-main.sh
 
 cd app
 
