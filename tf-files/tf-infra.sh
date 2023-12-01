@@ -98,7 +98,7 @@ resource "google_compute_instance" "$DB_INSTANCE_NAME" {
     }
     network_interface {
         network = "$VPC_NAME"
-        subnetwork = "$SUBNET_NAME-$REGION"
+        subnetwork = google_compute_subnetwork.$REGION.name
         access_config {
             nat_ip = google_compute_address.$STATIC_IP_ADDRESS_NAME.address
         }
