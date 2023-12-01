@@ -4,7 +4,7 @@ export VERSION="i"
 export APP_NAME="infra-auto-i"
 export DB_PASSWORD="password"
 
-export DB_CONTAINER_NAME="$APP_NAME-postgres-sql"
+export DB_CONTAINER_NAME="$APP_NAME-sql"
 # export DB_NAME="$APP_NAME-admin"
 export DB_USER="$APP_NAME-admin" 
 
@@ -27,6 +27,6 @@ docker run -d \
     -p 5000:5432 \
     postgres
 docker run -p 8000:80 \
-    -e 'PGADMIN_DEFAULT_EMAIL=m@example.com' \
+    -e 'PGADMIN_DEFAULT_EMAIL=guest@example.com' \
     -e 'PGADMIN_DEFAULT_PASSWORD=password' \
     -d dpage/pgadmin4

@@ -20,10 +20,10 @@ export ZONE="us-west1-a"
 export BOOT_DISK_SIZE="30"
 export TAGS="db"
 export FIREWALL_RULES_NAME="$APP_NAME-ports"
-export STATIC_IP_ADDRESS_NAME="tf-db-static-ip-address"
+export STATIC_IP_ADDRESS_NAME="tf-state-db-static-ip-address"
 export BUCKET_NAME="$APP_NAME-startup-script"
-export STARTUP_SCRIPT_BUCKET_SA="tf-startup-script-bucket-sa"
-export STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE="tfbucketCustomRole.$VERSION"
+export STARTUP_SCRIPT_BUCKET_SA="tf-state-bucket-sa"
+export STARTUP_SCRIPT_BUCKET_CUSTOM_ROLE="tfStatebucketCustomRole.$VERSION"
 export STARTUP_SCRIPT_NAME="startup-script"
 
 # For Notebook 
@@ -31,7 +31,7 @@ export NOTEBOOK_REGION='us-central1'
 export RANGE_C='10.150.0.0/20'
 
 #---------Database Credentials----------#
-export DB_CONTAINER_NAME="$APP_NAME-postgres-sql"
+export DB_CONTAINER_NAME="$APP_NAME-sql"
 export DB_NAME="$APP_NAME-admin"
 export DB_USER="$APP_NAME-admin" 
 # export DB_HOST=$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)
@@ -49,8 +49,8 @@ export CLOUD_BUILD_REGION="us-west2"
 export REGION="us-west1"
 export APP_ARTIFACT_NAME="$APP_NAME-artifact-registry"
 export APP_VERSION="latest"
-export APP_SERVICE_ACCOUNT_NAME="tf-app-service-account"
-export APP_CUSTOM_ROLE="tfappCustomRole.$VERSION"
+export APP_SERVICE_ACCOUNT_NAME="tf-state-app-sa"
+export APP_CUSTOM_ROLE="tfStateappCustomRole.$VERSION"
 export APP_PORT=9000
 export APP_ENV_FILE=".env.yaml"
 export MIN_INSTANCES=1
