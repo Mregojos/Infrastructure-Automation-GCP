@@ -11,6 +11,13 @@ sh tf-vars-main.sh
 
 cd app
 
+# Startup-script.sh
+# touch startup-script.sh
+# Change the version
+sed -i s/VERSION=".*"/VERSION=\""$VERSION"\"/g startup-script.sh
+sed -i s/APP_NAME=".*"/APP_NAME=\""$APP_NAME"\"/g startup-script.sh
+sed -i s/DB_PASSWORD=".*"/DB_PASSWORD=\""$DB_PASSWORD"\"/g startup-script.sh
+
 # build and submnit an image to Artifact Registry
 gcloud builds submit \
     --region=$CLOUD_BUILD_REGION \
