@@ -138,6 +138,19 @@ resource "google_project_iam_binding" "APP_BINDING" {
         ]
 }
 
+resource "google_compute_firewall" "$FIREWALL_RULES_NAME" {
+    name = "$FIREWALL_RULES_NAME"
+    allow {
+      ports = ["5000", "8000"]
+      protocol = "tcp"
+    }
+    direction = "INGRESS"
+    network = google_compute_network.$VPC_NAME.name
+    priority = 1000
+    source_ranges = ["0.0.0.0/0"]
+    target_tags = ["$TAGS"]
+}
+
 EOF
 
 # gcloud compute networks subnets list --network=$VPC_NAME
@@ -147,11 +160,6 @@ sh tf.sh
 echo "\n GCP Services successful created. \n"
 
 cd app
-
-# FIREWALL RULE
-gcloud compute --project=$(gcloud config get project) firewall-rules create $FIREWALL_RULES_NAME \
-    --direction=INGRESS --priority=1000 --network=$VPC_NAME --action=ALLOW --rules=tcp:5000,tcp:8000 --source-ranges=0.0.0.0/0   \
-     --target-tags=$TAGS
 
 # build and submnit an image to Artifact Registry
 gcloud builds submit \

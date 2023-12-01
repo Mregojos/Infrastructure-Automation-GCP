@@ -1,6 +1,5 @@
-gcloud compute firewall-rules delete $FIREWALL_RULES_NAME --quiet
 gcloud run services delete $APP_NAME --region=$REGION --quiet
-terraform destroy
+terraform destroy -auto-approve
 rm -rf t*.tfstate
 rm -rf t*.*.backup
 rm -rf main.tf
