@@ -187,7 +187,6 @@ resource "google_storage_bucket" "tf_bucket_backend" {
       enabled = true
     }
 }
-
 EOF
 
 sh tf.sh

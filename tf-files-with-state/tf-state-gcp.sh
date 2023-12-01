@@ -18,6 +18,8 @@ terraform {
 }
 EOF
 
+sh tf.sh
+
 cd app
 
 # build and submnit an image to Artifact Registry
