@@ -3,12 +3,6 @@
 gcloud services enable compute.googleapis.com iam.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com run.googleapis.com aiplatform.googleapis.com cloudresourcemanager.googleapis.com
 echo "\n #----------Services have been successfully enabled.----------# \n"
 
-# Without using variables
-# sh tf-main.sh
-
-# With variables
-sh tf-vars-main.sh
-
 cd app
 
 # Startup-script.sh
@@ -17,6 +11,16 @@ cd app
 sed -i s/VERSION=".*"/VERSION=\""$VERSION"\"/g startup-script.sh
 sed -i s/APP_NAME=".*"/APP_NAME=\""$APP_NAME"\"/g startup-script.sh
 sed -i s/DB_PASSWORD=".*"/DB_PASSWORD=\""$DB_PASSWORD"\"/g startup-script.sh
+
+cd ..
+
+# Without using variables
+# sh tf-main.sh
+
+# With variables
+sh tf-vars-main.sh
+
+cd app
 
 # build and submnit an image to Artifact Registry
 gcloud builds submit \
