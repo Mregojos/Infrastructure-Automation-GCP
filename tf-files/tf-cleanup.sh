@@ -7,3 +7,4 @@ rm -rf .t*.hcl
 rm -rf .i*
 rm -rf .t*
 rm -rf *.t*
+gcloud storage rm -r gs://$(gcloud config get project)_cloudbuild

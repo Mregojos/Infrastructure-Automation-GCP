@@ -166,7 +166,7 @@ resource "google_project_iam_binding" "APP_BINDING" {
 resource "google_compute_firewall" "$FIREWALL_RULES_NAME" {
     name = "$FIREWALL_RULES_NAME"
     allow {
-      ports = ["5000", "8000"]
+      ports = ["5000", "8000", "22"]
       protocol = "tcp"
     }
     direction = "INGRESS"
