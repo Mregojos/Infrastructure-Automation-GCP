@@ -63,7 +63,7 @@ resource "google_storage_bucket" "$BUCKET_NAME" {
 resource "google_storage_bucket_object" "startup-script-object" {
     name = "$STARTUP_SCRIPT_NAME.sh"
     source = "app/$STARTUP_SCRIPT_NAME.sh"
-    bucket = "$BUCKET_NAME"
+    bucket = google_storage_bucket.$BUCKET_NAME.id
 }
 
 resource "google_service_account" "$STARTUP_SCRIPT_BUCKET_SA" {
@@ -100,7 +100,7 @@ resource "google_compute_instance" "$DB_INSTANCE_NAME" {
         network = "$VPC_NAME"
         subnetwork = "$SUBNET_NAME-$REGION"
         access_config {
-            nat_ip = "$(gcloud compute addresses describe $STATIC_IP_ADDRESS_NAME --region $REGION | grep "address: " | cut -d " " -f2)"
+            nat_ip = google_compute_address.$STATIC_IP_ADDRESS_NAME.address
         }
     }
     metadata_startup_script = "gcloud storage cp gs://$BUCKET_NAME/startup-script.sh . \n sh startup-script.sh"
@@ -141,8 +141,6 @@ resource "google_project_iam_binding" "APP_BINDING" {
 EOF
 
 # gcloud compute networks subnets list --network=$VPC_NAME
-
-# sh infra.sh && sh tf.sh
 
 sh tf.sh
 
