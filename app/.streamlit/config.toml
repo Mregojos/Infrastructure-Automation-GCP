@@ -1,0 +1,24 @@
+[client]
+showErrorDetails = false
+showSidebarNavigation = false
+caching = false
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+# base = ""
+primaryColor = "purple"
+backgroundColor = "lightgray"
+secondaryBackgroundColor = "lightblue"
+# textColor = ""
+# font = ""
+
+[ui]
+hideTopBar = true
+
+[logger]
+level = "error"
+
+[server]
+fileWatcherType = "none"

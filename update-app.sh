@@ -1,6 +1,7 @@
 # In model-deployment App Repository run this to update the app
-cp -rf app-deployment/Main.py ~/infrastructure-automation-gcp/app
-cp -rf app-deployment/pages/Agent.py ~/infrastructure-automation-gcp/app/pages
-cp -rf test/* ~/infrastructure-automation-gcp/test
-cp -rf makefile ~/infrastructure-automation-gcp/makefile
+cp -rf app-deployment/Main.py ~/Infrastructure-Automation-GCP/app
+cp -rf app-deployment/pages/Agent.py app-deployment/pages/Toolkit.py ~/Infrastructure-Automation-GCP/app/pages
+cp -rf app-deployment/.streamlit/config.toml ~/Infrastructure-Automation-GCP/app/.streamlit/
+cp -rf test/* ~/Infrastructure-Automation-GCP/test
+cp -rf makefile ~/Infrastructure-Automation-GCP/makefile
 
