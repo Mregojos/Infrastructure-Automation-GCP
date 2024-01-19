@@ -72,8 +72,8 @@ sh tf-files-with-state/tf-state-cleanup.sh
 
 ---
 Resources:
-* GitHub Repository: https://github.com/mregojos/infrastructure-automation-gcp
-* App GitHub Repository: https://github.com/mregojos/model-deployment
+* Repository: https://github.com/mregojos/infrastructure-automation-gcp
+* Web App Repository: https://github.com/mregojos/model-deployment
 * CI/CD on GCP GitHub Repository: https://github.com/mregojos/CI-CD-GCP
 * Tech Stack GitHub Repository: https://github.com/mregojos/tech-stack
 * Google Cloud Docs: https://cloud.google.com/docs
